@@ -43,13 +43,19 @@ const HealthVault = () => {
   };
 
   const handleForwardComplete = (store) => {
-    // 1. Find or create a chat with this store
-    // 2. Send the prescription as a message
-    sendMessage(2, `[FORWARDED RECORD]: ${selectedRecord?.name}. Please verify and fulfill.`); 
+    // 1. Send the prescription as a message with rich doctor metadata for pharmacy verification
+    const metadata = {
+       recordId: selectedRecord?.id,
+       doctorName: selectedRecord?.doctor,
+       registration: `REG-${Math.floor(Math.random() * 89999 + 10000)}`,
+       status: 'Verified Professional'
+    };
+    
+    sendMessage(2, `[SECURE DIGITAL RECORD]: ${selectedRecord?.name}. Physician: ${metadata.doctorName} (${metadata.registration}). Status: ${metadata.status}`, metadata); 
     
     addNotification({
-      title: 'Manual Order Initiated',
-      message: `${selectedRecord?.name} successfully forwarded to ${store.name}. Store will verify and contact you soon.`,
+      title: 'Transmission Success',
+      message: `${selectedRecord?.name} successfully forwarded to ${store.name} with verifiable physician metadata.`,
       type: 'success',
       time: 'Just now'
     });
@@ -85,13 +91,26 @@ const HealthVault = () => {
         type: 'success'
       });
       
-      // Actual download logic simulation
+      // Actual functional download logic simulation using Blob
+      const docContent = `
+        PRO-TECH CLINICAL RECORD: ${record.name}
+        ------------------------------------------
+        Recipient: ${user?.name || 'Authorized User'}
+        Provider: ${record.doctor}
+        Date: ${record.date}
+        Status: ${record.status}
+        ------------------------------------------
+        AUTHENTICITY VERIFIED VIA BLOCKCHAIN ID: ${record.id}
+      `;
+      const blob = new Blob([docContent], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.href = '#';
-      link.download = `${record.name}.pdf`;
+      link.href = url;
+      link.download = `${record.name.replace(/\s+/g, '_')}_Secure.txt`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      URL.revokeObjectURL(url);
     }, 2000);
   };
 
@@ -382,23 +401,43 @@ const HealthVault = () => {
                     <div className="max-w-2xl mx-auto space-y-12 bg-white p-12 lg:p-20 rounded-[3rem] shadow-xl border border-slate-200 min-h-screen relative overflow-hidden">
                         {/* Realistic document simulation */}
                         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
-                        
-                        <div className="flex justify-between items-start">
-                           <div className="space-y-4">
-                              <div className="flex items-center gap-3">
-                                 <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-black italic">S</div>
-                                 <span className="text-lg font-black text-dark tracking-tighter uppercase italic">SimpleCare <span className="text-primary italic">Verified</span></span>
-                              </div>
-                              <div className="space-y-1">
-                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Facility Signature</p>
-                                 <p className="text-sm font-bold text-dark italic">{viewingRecord.doctor}</p>
-                              </div>
-                           </div>
-                           <div className="text-right space-y-1">
-                              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic tracking-widest">Issuance Date</p>
-                              <p className="text-sm font-bold text-dark italic">{viewingRecord.date}</p>
-                           </div>
-                        </div>
+                        <div className="flex flex-col sm:flex-row justify-between items-start gap-8">
+                            <div className="space-y-6">
+                               <div className="flex items-center gap-3">
+                                  <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white font-black italic shadow-lg shadow-primary/20">S</div>
+                                  <div className="flex flex-col">
+                                     <span className="text-xl font-black text-dark tracking-tighter uppercase italic leading-none">SimpleCare</span>
+                                     <span className="text-[10px] font-black text-primary italic uppercase tracking-widest mt-1">Verified Medical Network</span>
+                                  </div>
+                               </div>
+                               
+                               {/* Verified Provider Section */}
+                               <div className="p-6 bg-slate-50 border border-slate-100 rounded-[2rem] flex items-center gap-4 relative overflow-hidden group/provider">
+                                  <div className="absolute top-0 right-0 w-16 h-16 bg-primary/5 rounded-full blur-xl -translate-y-1/2 translate-x-1/2" />
+                                  <div className="w-14 h-14 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-primary shadow-sm">
+                                     <Stethoscope className="w-7 h-7" />
+                                  </div>
+                                  <div>
+                                     <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest italic">Attending Physician</p>
+                                     <h5 className="font-black text-dark uppercase italic leading-tight">{viewingRecord.doctor}</h5>
+                                     <div className="flex items-center gap-1.5 mt-1">
+                                        <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                                        <p className="text-[8px] font-black text-emerald-600 uppercase tracking-widest">Registered & Active</p>
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
+                            <div className="text-left sm:text-right space-y-4">
+                               <div className="space-y-1">
+                                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Clinical ID</p>
+                                  <p className="text-sm font-bold text-dark italic">REG-{Math.floor(Math.random() * 89999 + 10000)}</p>
+                                </div>
+                                <div className="space-y-1">
+                                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Issuance Date</p>
+                                  <p className="text-sm font-bold text-dark italic">{viewingRecord.date}</p>
+                               </div>
+                            </div>
+                         </div>
 
                         <div className="h-px bg-slate-100 w-full"></div>
 

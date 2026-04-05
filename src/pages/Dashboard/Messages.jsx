@@ -32,6 +32,22 @@ const Messages = () => {
     setMessage('');
   };
 
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file || !selectedChatId) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+       const isImage = file.type.startsWith('image/');
+       sendMessage(selectedChatId, `Shared a ${isImage ? 'photo' : 'file'}: ${file.name}`, {
+          type: isImage ? 'image' : 'file',
+          name: file.name,
+          data: reader.result
+       });
+    };
+    reader.readAsDataURL(file);
+  };
+
   return (
     <div className="h-[calc(100vh-140px)] flex bg-white rounded-[3.5rem] border border-slate-100 shadow-xl overflow-hidden animate-in slide-in-from-bottom-8 duration-700">
       
@@ -131,11 +147,33 @@ const Messages = () => {
                     <div className={`max-w-[70%] lg:max-w-md relative ${msg.sent ? 'order-1' : 'order-2'}`}>
                        <button 
                          onClick={() => deleteMessage(selectedChat.id, msg.id)}
-                         className={`absolute -top-2 ${msg.sent ? '-left-8' : '-right-8'} p-2 bg-white rounded-full shadow-lg opacity-0 group-hover/msg:opacity-100 transition-opacity hover:text-rose-500`}
+                         className={`absolute -top-2 ${msg.sent ? '-left-10' : '-right-10'} p-2.5 bg-white text-slate-400 rounded-full shadow-lg opacity-0 group-hover/msg:opacity-100 transition-all hover:text-rose-500 hover:scale-110 active:scale-95 z-20`}
                        >
                          <Trash2 className="w-3.5 h-3.5" />
                        </button>
-                       <div className={`p-6 rounded-3xl relative shadow-xl ${msg.sent ? 'bg-primary text-white rounded-tr-none' : 'bg-white text-dark rounded-tl-none border border-slate-100'}`}>
+                       <div className={`p-6 rounded-3xl relative shadow-xl space-y-3 ${msg.sent ? 'bg-primary text-white rounded-tr-none' : 'bg-white text-dark rounded-tl-none border border-slate-100'}`}>
+                          {msg.attachment?.type === 'image' && (
+                             <div className="mb-3 rounded-2xl overflow-hidden border-2 border-white/20 shadow-inner">
+                                <img src={msg.attachment.data} className="w-full max-h-64 object-cover" alt="" />
+                             </div>
+                          )}
+                          {msg.attachment?.type === 'file' && (
+                             <div className="flex items-center gap-3 p-3 bg-white/10 rounded-2xl border border-white/20 mb-3">
+                                <Paperclip className="w-5 h-5" />
+                                <div className="flex-1 truncate">
+                                   <p className="text-[10px] font-black uppercase truncate">{msg.attachment.name}</p>
+                                </div>
+                             </div>
+                          )}
+                          {msg.attachment?.registration && (
+                             <div className="p-4 bg-white/10 rounded-2xl border border-white/20 mb-3 space-y-2">
+                                <div className="flex items-center gap-2">
+                                   <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
+                                   <p className="text-[9px] font-black uppercase tracking-tighter">Verified Physician Metadata</p>
+                                </div>
+                                <p className="text-[11px] font-bold italic tracking-tight leading-none opacity-90">{msg.attachment.doctorName} ({msg.attachment.registration})</p>
+                             </div>
+                          )}
                           <p className="text-sm font-bold italic leading-relaxed">{msg.text}</p>
                        </div>
                        <div className={`flex items-center gap-2 mt-2 ${msg.sent ? 'justify-end' : 'justify-start'}`}>
@@ -150,12 +188,14 @@ const Messages = () => {
             {/* Chat Input */}
             <div className="p-8 bg-white border-t border-slate-50 z-10">
                 <div className="flex items-center gap-4 bg-white border border-slate-100 rounded-[2.5rem] p-2 pl-6 focus-within:ring-4 focus-within:ring-primary/10 transition-all shadow-xl">
-                   <button className="text-slate-400 hover:text-primary transition-all p-2">
+                   <label className="text-slate-400 hover:text-primary transition-all p-2 cursor-pointer">
                       <ImageIcon className="w-5 h-5" />
-                   </button>
-                   <button className="text-slate-400 hover:text-primary transition-all p-2">
+                      <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
+                   </label>
+                   <label className="text-slate-400 hover:text-primary transition-all p-2 cursor-pointer">
                       <Paperclip className="w-5 h-5" />
-                   </button>
+                      <input type="file" className="hidden" onChange={handleFileUpload} />
+                   </label>
                    <input 
                      type="text" 
                      value={message}

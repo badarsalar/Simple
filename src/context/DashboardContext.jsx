@@ -138,20 +138,22 @@ export const DashboardProvider = ({ children }) => {
     updateOrder(id, 'cancelled');
   };
 
-  const sendMessage = (chatId, text) => {
+  const sendMessage = (chatId, text, attachment = null) => {
     setChats(prev => prev.map(chat => {
       if (chat.id === chatId) {
-        const newMessage = {
-          id: Date.now(),
-          text,
-          sent: true,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        const newMessage = { 
+          id: Date.now(), 
+          text, 
+          sent: true, 
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          attachment // Support images/docs
         };
         return {
           ...chat,
           messages: [...chat.messages, newMessage],
-          lastMsg: text,
-          time: 'Just now'
+          lastMsg: text || (attachment ? 'Shared a file' : ''),
+          time: 'Just now',
+          unread: 0
         };
       }
       return chat;
