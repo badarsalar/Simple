@@ -160,6 +160,26 @@ export const DashboardProvider = ({ children }) => {
     }));
   };
 
+  const startChatWithProvider = (provider) => {
+    const existingChat = chats.find(c => c.name === (provider.name || provider.doctor || provider.store));
+    if (!existingChat) {
+      const newChat = {
+        id: Date.now(),
+        name: provider.name || provider.doctor || provider.store,
+        role: provider.specialty || provider.role || 'Pharmacy',
+        avatar: provider.image || provider.avatar || 'https://images.unsplash.com/photo-1576602976047-174e57a47881?q=80&w=200',
+        lastMsg: 'Chat started',
+        time: 'Just now',
+        unread: 0,
+        online: true,
+        messages: []
+      };
+      setChats(prev => [newChat, ...prev]);
+      return newChat.id;
+    }
+    return existingChat.id;
+  };
+
   const deleteMessage = (chatId, messageId) => {
     setChats(prev => prev.map(chat => {
       if (chat.id === chatId) {
@@ -189,6 +209,7 @@ export const DashboardProvider = ({ children }) => {
     cancelOrder,
     updateProfile,
     sendMessage,
+    startChatWithProvider,
     deleteMessage,
     deleteChat
   };

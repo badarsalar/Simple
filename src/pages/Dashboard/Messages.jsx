@@ -52,13 +52,10 @@ const Messages = () => {
     <div className="h-[calc(100vh-140px)] flex bg-white rounded-[3.5rem] border border-slate-100 shadow-xl overflow-hidden animate-in slide-in-from-bottom-8 duration-700">
       
       {/* Sidebar: Chat List */}
-      <div className={`w-full lg:w-96 border-r border-slate-50 flex flex-col bg-white ${selectedChat ? 'hidden lg:flex' : 'flex'}`}>
+      <div className={`w-full lg:w-96 border-r border-slate-50 flex flex-col bg-white ${selectedChatId ? 'hidden lg:flex' : 'flex'}`}>
         <div className="p-8 space-y-6">
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-black text-dark italic uppercase tracking-tight leading-none">Messages</h2>
-            <button className="p-3 bg-primary/5 text-primary rounded-2xl hover:bg-primary hover:text-white transition-all shadow-sm">
-              <Plus className="w-5 h-5" />
-            </button>
           </div>
           <div className="relative group">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-primary transition-colors" />
@@ -104,7 +101,7 @@ const Messages = () => {
       </div>
 
       {/* Main Chat Area */}
-      <div className={`flex-1 flex flex-col bg-slate-50/50 ${!selectedChat ? 'hidden lg:flex' : 'flex'}`}>
+      <div className={`flex-1 flex flex-col bg-slate-50/50 ${!selectedChatId ? 'hidden lg:flex' : 'flex'}`}>
         {selectedChat ? (
           <>
             {/* Chat Header */}
@@ -125,14 +122,14 @@ const Messages = () => {
                    </div>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
-                 <button onClick={() => deleteChat(selectedChat.id)} className="p-3 bg-rose-50 rounded-2xl text-rose-500 hover:bg-rose-500 hover:text-white transition-all group/hdr pl-4 pr-4">
-                    <Trash2 className="w-5 h-5" />
-                 </button>
-                 <button className="p-3 bg-slate-50 rounded-2xl text-slate-400 hover:text-primary transition-all">
-                    <Video className="w-5 h-5" />
-                 </button>
-              </div>
+               <div className="flex items-center gap-3">
+                  <button onClick={() => deleteChat(selectedChat.id)} className="p-3 bg-rose-50 rounded-2xl text-rose-500 hover:bg-rose-500 hover:text-white transition-all group/hdr">
+                     <Trash2 className="w-5 h-5" />
+                  </button>
+                  <button className="hidden sm:block p-3 bg-slate-50 rounded-2xl text-slate-400 hover:text-primary transition-all">
+                     <Video className="w-5 h-5" />
+                  </button>
+               </div>
             </div>
 
             {/* Messages List Area */}

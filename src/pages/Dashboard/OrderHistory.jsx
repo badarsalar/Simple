@@ -14,10 +14,13 @@ import {
   MoreVertical
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { Link } from 'react-router-dom';
+import { useDashboard } from '../../context/DashboardContext';
+import { Link, useNavigate } from 'react-router-dom';
 
 const OrderHistory = () => {
   const { addNotification } = useAuth();
+  const { startChatWithProvider } = useDashboard();
+  const navigate = useNavigate();
   const [filter, setFilter] = useState('all');
   const [showCancelModal, setShowCancelModal] = useState(null);
 
@@ -61,6 +64,11 @@ const OrderHistory = () => {
       type: 'warning'
     });
     setShowCancelModal(null);
+  };
+
+  const handleChatWithPharmacy = (order) => {
+     startChatWithProvider(order);
+     navigate('/dashboard/messages');
   };
 
   const statusColors = {
@@ -126,9 +134,12 @@ const OrderHistory = () => {
                     </div>
                     
                     <div className="flex gap-2 w-full lg:w-auto">
-                       <Link to="/dashboard/messages" className="flex-1 px-6 py-4 bg-slate-50 border border-slate-100 text-dark rounded-2xl text-[9px] font-black uppercase italic tracking-widest hover:bg-slate-100 transition-all flex items-center justify-center gap-2">
-                          <MessageSquare className="w-4 h-4" /> Chat
-                       </Link>
+                        <button 
+                           onClick={() => handleChatWithPharmacy(order)}
+                           className="flex-1 px-6 py-4 bg-slate-50 border border-slate-100 text-dark rounded-2xl text-[9px] font-black uppercase italic tracking-widest hover:bg-slate-100 transition-all flex items-center justify-center gap-2"
+                        >
+                           <MessageSquare className="w-4 h-4 text-primary" /> Chat
+                        </button>
                        {order.status === 'Processing' && (
                           <button 
                              onClick={() => setShowCancelModal(order.id)}

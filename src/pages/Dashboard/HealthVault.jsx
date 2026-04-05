@@ -15,7 +15,6 @@ import {
   Send,
   Trash2,
   AlertCircle,
-  FileCheck,
   ArrowRight,
   RefreshCw,
   Calendar
@@ -217,15 +216,12 @@ const HealthVault = () => {
                        <div className={`w-16 h-16 rounded-[2rem] flex items-center justify-center transition-transform group-hover:scale-110 shadow-lg ${record.type === 'Digital' ? 'bg-primary/10 text-primary' : 'bg-amber-50 text-amber-500'}`}>
                           {record.type === 'Digital' ? <FileText className="w-8 h-8" /> : <ImageIcon className="w-8 h-8" />}
                        </div>
-                       <div className="flex gap-1">
-                          <button 
-                             onClick={() => setShowDeleteConfirm(record.id)}
-                             className="p-3 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all"
-                          >
+                       <div className="flex items-center gap-3">
+                          <button onClick={() => deleteChat(record.id)} className="p-3 bg-rose-50 rounded-2xl text-rose-500 hover:bg-rose-500 hover:text-white transition-all group/hdr">
                              <Trash2 className="w-5 h-5" />
                           </button>
-                          <button className="p-3 text-slate-300 hover:text-dark hover:bg-slate-50 rounded-xl transition-all">
-                             <MoreVertical className="w-5 h-5" />
+                          <button className="hidden sm:block p-3 bg-slate-50 rounded-2xl text-slate-400 hover:text-primary transition-all">
+                             <MoreHorizontal className="w-5 h-5" />
                           </button>
                        </div>
                     </div>
@@ -315,9 +311,9 @@ const HealthVault = () => {
                 
                 <form onSubmit={handleUploadSubmit} className="p-12 lg:p-16 space-y-10 text-center">
                    <div className="space-y-2">
-                      <h3 className="text-3xl font-black italic text-dark uppercase tracking-tight leading-none">Vault <span className="text-primary italic">Transmit</span></h3>
-                      <p className="text-slate-400 font-bold italic text-sm">Upload physical prescriptions or reports for verification.</p>
-                   </div>
+                       <h3 className="text-3xl font-black italic text-dark uppercase tracking-tight leading-none">Vault <span className="text-primary italic">Transmit</span></h3>
+                       <p className="text-slate-400 font-bold italic text-sm">Upload physical prescriptions or reports for verification.</p>
+                    </div>
 
                    <div className="border-4 border-dashed border-slate-100 rounded-[3.5rem] p-20 flex flex-col items-center gap-8 hover:border-primary/20 hover:bg-slate-50/50 transition-all cursor-pointer group relative">
                       <div className={`w-24 h-24 rounded-[2.5rem] flex items-center justify-center transition-all shadow-xl
@@ -363,12 +359,12 @@ const HealthVault = () => {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[2000] flex items-center justify-center p-6 bg-dark/95 backdrop-blur-xl"
           >
-             <motion.div 
-                initial={{ scale: 0.9, y: 40 }}
-                animate={{ scale: 1, y: 0 }}
-                exit={{ scale: 0.9, y: 40 }}
-                className="bg-white w-full max-w-4xl h-[90vh] rounded-[4rem] overflow-hidden flex flex-col relative shadow-2xl"
-              >
+              <motion.div 
+                 initial={{ scale: 0.9, y: 40 }}
+                 animate={{ scale: 1, y: 0 }}
+                 exit={{ scale: 0.9, y: 40 }}
+                 className="bg-white w-full sm:max-w-4xl h-full sm:h-[90vh] rounded-[2rem] sm:rounded-[4rem] overflow-hidden flex flex-col relative shadow-2xl"
+               >
                 {/* Viewer Header */}
                 <div className="p-8 border-b border-slate-100 flex justify-between items-center bg-white z-10">
                    <div className="flex items-center gap-4">
@@ -397,8 +393,8 @@ const HealthVault = () => {
                 </div>
 
                 {/* Viewer Content */}
-                <div className="flex-1 overflow-y-auto p-12 bg-slate-100/50">
-                    <div className="max-w-2xl mx-auto space-y-12 bg-white p-12 lg:p-20 rounded-[3rem] shadow-xl border border-slate-200 min-h-screen relative overflow-hidden">
+                <div className="flex-1 overflow-y-auto p-6 sm:p-12 bg-slate-100/50">
+                    <div className="max-w-2xl mx-auto space-y-12 bg-white p-8 sm:p-12 lg:p-20 rounded-[2rem] sm:rounded-[3rem] shadow-xl border border-slate-200 min-h-screen relative overflow-hidden">
                         {/* Realistic document simulation */}
                         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
                         <div className="flex flex-col sm:flex-row justify-between items-start gap-8">

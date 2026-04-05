@@ -18,10 +18,13 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useDashboard } from '../../context/DashboardContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { MessageSquare } from 'lucide-react';
 
 const Appointments = () => {
   const { addNotification } = useAuth();
-  const { appointments, cancelAppointment } = useDashboard();
+  const { appointments, cancelAppointment, startChatWithProvider } = useDashboard();
+  const navigate = useNavigate();
   const [filter, setFilter] = useState('upcoming');
   const [showCancelConfirm, setShowCancelConfirm] = useState(null);
   const [showRescheduleModal, setShowRescheduleModal] = useState(null);
@@ -68,6 +71,11 @@ const Appointments = () => {
         type: 'success'
       });
     }, 2000);
+  };
+
+  const handleChatWithDoctor = (app) => {
+     startChatWithProvider(app);
+     navigate('/dashboard/messages');
   };
 
   const filteredAppointments = appointments.filter(app => {
@@ -149,19 +157,27 @@ const Appointments = () => {
                       
                       <div className="flex gap-2 w-full lg:w-auto">
                          {app.status === 'confirmed' && (
-                            <button 
-                              onClick={() => handleJoin(app.id)}
-                              disabled={isConnecting === app.id}
-                              className="flex-1 px-6 py-3 bg-primary text-white rounded-2xl text-[9px] font-black uppercase italic tracking-widest shadow-lg shadow-primary/20 hover:scale-105 transition-all flex items-center justify-center gap-2 min-w-[100px]"
-                            >
-                               {isConnecting === app.id ? (
-                                 <RefreshCw className="w-3 h-3 animate-spin" />
-                               ) : (
-                                 <Video className="w-3 h-3" />
-                               )}
-                               {isConnecting === app.id ? 'Linking' : 'Join'}
-                            </button>
-                         )}
+                             <button 
+                               onClick={() => handleJoin(app.id)}
+                               disabled={isConnecting === app.id}
+                               className="flex-1 px-4 py-3 bg-primary text-white rounded-2xl text-[9px] font-black uppercase italic tracking-widest shadow-lg shadow-primary/20 hover:scale-105 transition-all flex items-center justify-center gap-2"
+                             >
+                                {isConnecting === app.id ? (
+                                  <RefreshCw className="w-3 h-3 animate-spin" />
+                                ) : (
+                                  <Video className="w-3 h-3" />
+                                )}
+                                {isConnecting === app.id ? 'Linking' : 'Join'}
+                             </button>
+                          )}
+                          {app.status === 'confirmed' && (
+                             <button 
+                               onClick={() => handleChatWithDoctor(app)}
+                               className="flex-1 px-4 py-3 bg-white border border-slate-100 text-dark rounded-2xl text-[9px] font-black uppercase italic tracking-widest hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
+                             >
+                                <MessageSquare className="w-3.5 h-3.5 text-primary" /> Chat
+                             </button>
+                          )}
                          {app.status !== 'completed' && app.status !== 'cancelled' && (
                             <>
                                <button 
