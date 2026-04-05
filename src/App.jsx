@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider } from './context/AuthContext';
 import { PrescriptionProvider } from './context/PrescriptionContext';
 import { CartProvider } from './context/CartContext';
+import { DashboardProvider } from './context/DashboardContext';
 
 import LandingPage from './pages/LandingPage';
 import AuthLayout from './layouts/AuthLayout';
@@ -31,7 +32,8 @@ function App() {
     <AuthProvider>
       <PrescriptionProvider>
         <CartProvider>
-          <Router>
+          <DashboardProvider>
+            <Router>
           <div>
           <Routes>
             <Route path="/" element={<LandingPage />} />
@@ -81,8 +83,9 @@ function App() {
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
           </div>
-        </Router>
-      </CartProvider>
+            </Router>
+          </DashboardProvider>
+        </CartProvider>
       </PrescriptionProvider>
     </AuthProvider>
   );

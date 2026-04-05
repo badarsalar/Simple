@@ -22,7 +22,6 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { DashboardProvider } from '../context/DashboardContext';
 
 const DashboardLayout = ({ children }) => {
   const { user, logout } = useAuth();
@@ -233,9 +232,7 @@ const DashboardLayout = ({ children }) => {
 
         {/* Dashboard Content */}
         <main className="flex-1 overflow-y-auto no-scrollbar pb-32 lg:pb-12">
-          <DashboardProvider>
-            {children}
-          </DashboardProvider>
+          {children}
         </main>
       </div>
     </div>

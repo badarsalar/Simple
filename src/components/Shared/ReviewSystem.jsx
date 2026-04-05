@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Star, MessageSquare, User, Send, LogIn } from 'lucide-react';
+import { Star, MessageSquare, User, Send, LogIn, ArrowRight } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useDashboard } from '../../context/DashboardContext';
 import { Link } from 'react-router-dom';
