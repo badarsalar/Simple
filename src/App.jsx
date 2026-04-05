@@ -1,0 +1,70 @@
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import { PrescriptionProvider } from './context/PrescriptionContext';
+import { CartProvider } from './context/CartContext';
+
+import LandingPage from './pages/LandingPage';
+import AuthLayout from './layouts/AuthLayout';
+import Login from './pages/Auth/Login';
+import Signup from './pages/Auth/Signup';
+import SocialAuthCompletion from './pages/Auth/SocialAuthCompletion';
+import MobileBottomNav from './components/MobileBottomNav';
+
+// Dashboards removed
+
+import Doctors from './pages/Doctors';
+import Clinics from './pages/Clinics';
+import ClinicDetails from './pages/ClinicDetails';
+import Medicines from './pages/Medicines';
+import MedicineDetails from './pages/MedicineDetails';
+import Pharmacies from './pages/Pharmacies';
+import PharmacyDetails from './pages/PharmacyDetails';
+import ProviderProfile from './pages/ProviderProfile';
+import BookAppointment from './pages/BookAppointment';
+import Orders from './pages/Orders';
+import Stream from './pages/Stream';
+import LiveStreams from './pages/LiveStreams';
+
+function App() {
+  return (
+    <AuthProvider>
+      <PrescriptionProvider>
+        <CartProvider>
+          <Router>
+          <div className="pb-16 lg:pb-0 hidden-scrollbar">
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            
+            <Route element={<AuthLayout />}>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/auth/completion" element={<SocialAuthCompletion />} />
+            </Route>
+
+            {/* Dashboard routes removed */}
+            <Route path="/stream/:id" element={<Stream />} />
+            <Route path="/streams" element={<LiveStreams />} />
+            <Route path="/doctors" element={<Doctors />} />
+            <Route path="/clinics" element={<Clinics />} />
+            <Route path="/clinic/:id" element={<ClinicDetails />} />
+            <Route path="/medicines" element={<Medicines />} />
+            <Route path="/medicine/:id" element={<MedicineDetails />} />
+            <Route path="/pharmacies" element={<Pharmacies />} />
+            <Route path="/pharmacy/:id" element={<PharmacyDetails />} />
+            <Route path="/profile/:id" element={<ProviderProfile />} />
+            <Route path="/book/:id" element={<BookAppointment />} />
+            <Route path="/orders" element={<Orders />} />
+            
+            {/* Fallback */}
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+          <MobileBottomNav />
+          </div>
+        </Router>
+      </CartProvider>
+      </PrescriptionProvider>
+    </AuthProvider>
+  );
+}
+
+export default App;
