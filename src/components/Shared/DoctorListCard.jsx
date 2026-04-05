@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Star, Clock, Video, Crown, CheckCircle2, Heart, Verified } from 'lucide-react';
+import { Star, Clock, Video, Crown, CheckCircle2, Heart, Verified, MapPin } from 'lucide-react';
 import SubscriptionBadge from './SubscriptionBadge';
 
 const DoctorListCard = ({
@@ -16,6 +16,7 @@ const DoctorListCard = ({
   hasActiveAds,
   isFav,
   onToggleFav,
+  address,
 }) => {
   const isSponsored = subscription?.type !== 'Free' || hasActiveAds;
   const tier = subscription?.type;
@@ -43,7 +44,7 @@ const DoctorListCard = ({
         {/* Avatar */}
         <div className="relative shrink-0">
           <img
-            src={image || 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=400'}
+            src={image || '/images/facilities/doctor-placeholder.svg'}
             alt={name}
             className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl object-cover border-2 border-slate-50"
           />
@@ -73,6 +74,12 @@ const DoctorListCard = ({
                 />
               </button>
             )}
+          </div>
+
+          {/* Address */}
+          <div className="flex items-center gap-1 mt-1 text-xs text-slate-500 font-medium">
+            <MapPin className="w-3 h-3 shrink-0" />
+            <span className="truncate">{address || 'Address not available'}</span>
           </div>
 
           {/* Meta row */}

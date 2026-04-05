@@ -18,10 +18,12 @@ const Clinics = () => {
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const staticClinics = [
-    { id: 1, name: 'City Dental Care', address: '456 Broadway, Manhattan, NY', rating: '4.9', reviews: '1.2k', type: 'Dental Clinic', image: 'https://images.unsplash.com/photo-1629909608132-2d159bd4498a?q=80&w=400', services: ['Cleaning', 'Implants', 'X-Ray'] },
-    { id: 2, name: 'Grace Hills Medical', address: '789 Park Ave, Brooklyn, NY', rating: '4.8', reviews: '850', type: 'General Hospital', image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=400', services: ['Emergency', 'Surgery', 'Diagnostics'] },
-    { id: 3, name: 'Sunset Eye Clinic', address: '12 5th Ave, Queens, NY', rating: '5.0', reviews: '430', type: 'Specialized Clinic', image: 'https://images.unsplash.com/photo-1586773860418-d3b9a8ec8172?q=80&w=400', services: ['Eye Exam', 'Lasik', 'Optical'] },
-    { id: 4, name: 'North West Ortho', address: '88 Union Square, NY', rating: '4.7', reviews: '620', type: 'Rehab Center', image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=400', services: ['Physio', 'Fracture', 'Sports'] },
+    { id: 1, name: 'Islamabad Dental Clinic', address: 'Blue Area, Islamabad, Pakistan', rating: '4.9', reviews: '1.2k', type: 'Dental Clinic', image: 'https://images.unsplash.com/photo-1629909608132-2d159bd4498a?q=80&w=400', services: ['Cleaning', 'Implants', 'X-Ray'] },
+    { id: 2, name: 'Lahore General Hospital', address: 'Gulberg, Lahore, Pakistan', rating: '4.8', reviews: '850', type: 'General Hospital', image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=400', services: ['Emergency', 'Surgery', 'Diagnostics'] },
+    { id: 3, name: 'Karachi Eye Center', address: 'Clifton, Karachi, Pakistan', rating: '5.0', reviews: '430', type: 'Specialized Clinic', image: 'https://images.unsplash.com/photo-1586773860418-d3b9a8ec8172?q=80&w=400', services: ['Eye Exam', 'Lasik', 'Optical'] },
+    { id: 4, name: 'AJK Orthopedic Center', address: 'Muzaffarabad, AJK, Pakistan', rating: '4.7', reviews: '620', type: 'Rehab Center', image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=400', services: ['Physio', 'Fracture', 'Sports'] },
+    { id: 5, name: 'Peshawar Medical Complex', address: 'University Town, Peshawar, Pakistan', rating: '4.6', reviews: '1.1k', type: 'Medical Complex', image: 'https://images.unsplash.com/photo-1551190822-a9333d879b1f?q=80&w=400', services: ['Consultation', 'Surgery', 'Emergency'] },
+    { id: 6, name: 'Quetta Heart Institute', address: 'Airport Road, Quetta, Pakistan', rating: '4.8', reviews: '750', type: 'Cardiac Center', image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?q=80&w=400', services: ['Cardiology', 'Angioplasty', 'ECG'] },
   ];
 
   const registeredClinics = providers
@@ -33,7 +35,7 @@ const Clinics = () => {
       rating: '5.0',
       reviews: '12',
       type: 'Medical Facility',
-      image: p.avatar || 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=400',
+      image: p.avatar || '/images/facilities/clinic-placeholder.svg',
       services: ['General Care', 'Consultation']
     }));
 

@@ -23,7 +23,7 @@ const StreamCard = ({ stream }) => {
   return (
   <div 
     onClick={() => navigate(`/stream/${stream.id}`)}
-    className="group relative bg-white rounded-[2.5rem] overflow-hidden border border-slate-100 hover:border-primary/30 transition-all cursor-pointer shadow-xl hover:-translate-y-2 duration-500"
+    className="group relative bg-white rounded-2xl overflow-hidden border border-slate-100 hover:border-primary/30 transition-all cursor-pointer shadow-lg hover:shadow-xl hover:-translate-y-1 duration-300"
   >
     <div className="aspect-video relative overflow-hidden">
       <img 
@@ -107,7 +107,7 @@ const LiveStreams = () => {
                    </div>
                    
                    <div className="space-y-4">
-                      <h1 className="text-5xl lg:text-7xl font-black italic uppercase tracking-tighter leading-none">
+                      <h1 className="text-3xl lg:text-5xl font-black italic uppercase tracking-tighter leading-none">
                         Neurology <span className="text-primary italic">Deep Dive</span>
                       </h1>
                       <div className="flex items-center gap-4 pt-2">
@@ -144,19 +144,19 @@ const LiveStreams = () => {
         {/* Categories Bar */}
         <div className="flex overflow-x-auto scrollbar-hide gap-4 pb-4">
            {categories.map(cat => (
-             <button key={cat.label} className="px-8 py-6 bg-white rounded-[2.5rem] border border-slate-100 hover:border-primary/20 hover:bg-slate-50 transition-all group shrink-0 shadow-sm">
-               <span className="block font-black italic text-sm uppercase tracking-tight text-dark group-hover:text-primary transition-colors">{cat.label}</span>
-               <span className="block text-[9px] font-black text-slate-400 uppercase tracking-widest mt-1 italic">{cat.count}</span>
+             <button key={cat.label} className="px-6 py-4 bg-white rounded-xl border border-slate-100 hover:border-primary/20 hover:bg-slate-50 transition-all group shrink-0 shadow-sm">
+               <span className="block font-semibold text-sm uppercase tracking-tight text-dark group-hover:text-primary transition-colors">{cat.label}</span>
+               <span className="block text-xs font-medium text-slate-400 uppercase tracking-wide mt-1">{cat.count}</span>
              </button>
            ))}
         </div>
  
         {/* Live Wall Grid */}
         <section className="space-y-10">
-           <div className="flex items-center justify-between border-b border-slate-200 pb-8">
+           <div className="flex items-center justify-between border-b border-slate-200 pb-6">
               <div className="space-y-1">
-                 <h2 className="text-3xl font-black italic uppercase tracking-tighter text-dark">Live <span className="text-primary italic">Sessions</span></h2>
-                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] italic">Real-Time Medical Intelligence</p>
+                 <h2 className="text-2xl lg:text-3xl font-bold uppercase tracking-tight text-dark">Live <span className="text-primary">Sessions</span></h2>
+                 <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">Real-Time Medical Intelligence</p>
               </div>
               <div className="flex bg-white p-1 rounded-2xl border border-slate-200 shadow-sm">
                  <button className="px-6 py-2 bg-primary text-white text-[10px] font-black uppercase italic rounded-xl">Recommended</button>

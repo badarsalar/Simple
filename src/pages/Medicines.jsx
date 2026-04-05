@@ -24,8 +24,11 @@ const MedicineCard = ({ id, name, category, price, rating, reviews, image, onAdd
       <div className="absolute top-2 left-2 bg-white/90 backdrop-blur px-2 py-1 rounded-md text-[10px] font-bold text-dark shadow-sm border border-slate-100">
         {category}
       </div>
+      <div className="absolute top-2 right-2 bg-emerald-500 text-white px-2 py-1 rounded-md text-[10px] font-bold shadow-sm">
+        Rx Verified
+      </div>
     </Link>
-    
+
     <div className="flex-1 space-y-2 mb-4">
       <div className="flex justify-between items-start gap-2">
         <Link to={`/medicine/${id}`} className="block group/title flex-1">
@@ -35,21 +38,22 @@ const MedicineCard = ({ id, name, category, price, rating, reviews, image, onAdd
           <Star className="w-3 h-3 fill-amber-400 text-amber-400" /> {rating}
         </div>
       </div>
-      
-      <p className="text-[11px] font-medium text-slate-500 line-clamp-1">{category} • Rx Verified</p>
-      
+
+      <p className="text-[11px] font-medium text-slate-500 line-clamp-1">{category} • {reviews} reviews</p>
+
       <div className="flex items-baseline gap-2 pt-1">
         <span className="text-lg font-bold text-dark">Rs. {price}</span>
         <span className="text-[10px] font-semibold text-slate-400 line-through">Rs. {(parseFloat(price) * 1.2).toFixed(2)}</span>
+        <span className="text-[10px] font-bold text-emerald-600">Save 17%</span>
       </div>
     </div>
-    
+
     <div className="mt-auto">
-      <button 
+      <button
         onClick={() => onAdd({ id, name, category, price, image })}
-        className="w-full py-2.5 bg-primary/10 text-primary border border-primary/20 rounded-lg font-bold text-xs hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-2"
+        className="w-full py-2.5 bg-primary/10 text-primary border border-primary/20 rounded-lg font-bold text-xs hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-2 group/btn"
       >
-        <Plus className="w-4 h-4" /> Add to Cart
+        <Plus className="w-4 h-4 group-hover/btn:scale-110 transition-transform" /> Add to Cart
       </button>
     </div>
   </div>

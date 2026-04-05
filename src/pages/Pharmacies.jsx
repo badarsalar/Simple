@@ -17,10 +17,12 @@ const Pharmacies = () => {
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const staticPharmacies = [
-    { id: 1, name: 'HealthFirst Pharmacy', address: '123 Medical Center Way, Manhattan, NY', rating: '4.9', reviews: '2.1k', openUntil: '11:00 PM', delivery: true, image: 'https://images.unsplash.com/photo-1586015555751-63bb77f4322a?q=80&w=400' },
-    { id: 2, name: 'CVS Special Care', address: '789 Park Ave, Brooklyn, NY', rating: '4.8', reviews: '1.5k', openUntil: '12:00 AM', delivery: true, image: 'https://images.unsplash.com/photo-1587854692152-cbe660dbbb88?q=80&w=400' },
-    { id: 3, name: 'Rite Aid NY', address: '345 5th Ave, Queens, NY', rating: '4.7', reviews: '950', openUntil: '10:00 PM', delivery: false, image: 'https://images.unsplash.com/photo-1631549916768-4119b295f786?q=80&w=400' },
-    { id: 4, name: 'Green Cross Medical', address: '12 Union Square, NY', rating: '5.0', reviews: '820', openUntil: '24 Hours', delivery: true, image: 'https://images.unsplash.com/photo-1547489432-cf93fa6c71ee?q=80&w=400' },
+    { id: 1, name: 'Al-Shifa Pharmacy', address: 'F-8 Markaz, Islamabad, Pakistan', rating: '4.9', reviews: '2.1k', openUntil: '11:00 PM', delivery: true, image: 'https://images.unsplash.com/photo-1587854692152-cbe660dbbb88?q=80&w=400' },
+    { id: 2, name: 'MedPlus Pharmacy', address: 'Liberty Market, Lahore, Pakistan', rating: '4.8', reviews: '1.5k', openUntil: '12:00 AM', delivery: true, image: 'https://images.unsplash.com/photo-1631549916768-4119b295f786?q=80&w=400' },
+    { id: 3, name: 'City Pharmacy Karachi', address: 'Saddar, Karachi, Pakistan', rating: '4.7', reviews: '950', openUntil: '10:00 PM', delivery: false, image: 'https://images.unsplash.com/photo-1586015555751-63bb77f4322a?q=80&w=400' },
+    { id: 4, name: 'AJK Medical Store', address: 'Muzaffarabad, AJK, Pakistan', rating: '5.0', reviews: '820', openUntil: '24 Hours', delivery: true, image: 'https://images.unsplash.com/photo-1547489432-cf93fa6c71ee?q=80&w=400' },
+    { id: 5, name: 'Peshawar Pharmacy', address: 'Hayatabad, Peshawar, Pakistan', rating: '4.6', reviews: '1.2k', openUntil: '9:00 PM', delivery: true, image: 'https://images.unsplash.com/photo-1587854692152-cbe660dbbb88?q=80&w=400' },
+    { id: 6, name: 'Quetta Health Pharmacy', address: 'Jinnah Town, Quetta, Pakistan', rating: '4.8', reviews: '680', openUntil: '8:00 PM', delivery: false, image: 'https://images.unsplash.com/photo-1631549916768-4119b295f786?q=80&w=400' },
   ];
 
   const registeredPharmacies = providers
@@ -33,7 +35,7 @@ const Pharmacies = () => {
       reviews: '15',
       openUntil: '9:00 PM',
       delivery: true,
-      image: p.avatar || 'https://images.unsplash.com/photo-1586015555751-63bb77f4322a?q=80&w=400'
+      image: p.avatar || '/images/facilities/pharmacy-placeholder.svg'
     }));
 
   const pharmacies = [...staticPharmacies, ...registeredPharmacies].map(p => ({

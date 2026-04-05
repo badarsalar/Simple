@@ -114,10 +114,18 @@ const LandingPage = () => {
 
   // Static top doctors for demo  
   const staticDoctors = [
-    { id: 's1', name: 'Dr. Sarah Johnson', specialty: 'Cardiologist', rating: '4.9', reviews: '342', experience: '15', fee: '3,000', image: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=400' },
-    { id: 's2', name: 'Dr. Adam Cooper', specialty: 'Oncologist', rating: '4.8', reviews: '289', experience: '12', fee: '2,500', image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=400' },
-    { id: 's3', name: 'Dr. Emma Wilson', specialty: 'Dermatologist', rating: '4.9', reviews: '512', experience: '8', fee: '2,000', image: 'https://images.unsplash.com/photo-1559839734-2b71f153678e?q=80&w=400' },
-    { id: 's4', name: 'Dr. Lucas Grey', specialty: 'Neurologist', rating: '4.7', reviews: '198', experience: '10', fee: '3,500', image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=400' },
+    { id: 's1', name: 'Dr. Ahmed Khan', specialty: 'Cardiologist', rating: '4.9', reviews: '342', experience: '15', fee: '3,000', image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=400', address: 'Shalimar Hospital, Lahore, Pakistan' },
+    { id: 's2', name: 'Dr. Fatima Bibi', specialty: 'Gynecologist', rating: '4.8', reviews: '289', experience: '12', fee: '2,500', image: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=400', address: 'Pakistan Institute of Medical Sciences, Islamabad' },
+    { id: 's3', name: 'Dr. Ayesha Malik', specialty: 'Dermatologist', rating: '4.9', reviews: '512', experience: '8', fee: '2,000', image: 'https://images.unsplash.com/photo-1559839734-2b71f153678e?q=80&w=400', address: 'DHA Medical Center, Karachi, Pakistan' },
+    { id: 's4', name: 'Dr. Muhammad Ali', specialty: 'Neurologist', rating: '4.7', reviews: '198', experience: '10', fee: '3,500', image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=400', address: 'Jinnah Hospital, Lahore, Pakistan' },
+  ];
+
+  // Placeholder streams for landing page
+  const placeholderStreams = [
+    { id: 'placeholder-1', name: 'Dr. Coming Soon', specialization: 'Specialist', avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjNmNGY2Ii8+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjgwIiByPSI0MCIgZmlsbD0iI2U3ZTdlYSIvPgo8Y2lyY2xlIGN4PSI4NSIgY3k9IjY1IiByPSI2IiBmaWxsPSIjOWNhM2FmIi8+CjxjaXJjbGUgY3g9IjExNSIgY3k9IjY1IiByPSI2IiBmaWxsPSIjOWNhM2FmIi8+CjxwYXRoIGQ9Ik0gODUgOTUgUTEwMCAxMTAgMTE1IDk1IiBzdHJva2U9IiM5Y2EzYWYiIHN0cm9rZS13aWR0aD0iNCIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4K' },
+    { id: 'placeholder-2', name: 'Dr. Scheduled', specialization: 'Specialist', avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjNmNGY2Ii8+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjgwIiByPSI0MCIgZmlsbD0iI2U3ZTdlYSIvPgo8Y2lyY2xlIGN4PSI4NSIgY3k9IjY1IiByPSI2IiBmaWxsPSIjOWNhM2FmIi8+CjxjaXJjbGUgY3g9IjExNSIgY3k9IjY1IiByPSI2IiBmaWxsPSIjOWNhM2FmIi8+CjxwYXRoIGQ9Ik0gODUgOTUgUTEwMCAxMTAgMTE1IDk1IiBzdHJva2U9IiM5Y2EzYWYiIHN0cm9rZS13aWR0aD0iNCIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4K' },
+    { id: 'placeholder-3', name: 'Dr. Interactive', specialization: 'Specialist', avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjNmNGY2Ii8+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjgwIiByPSI0MCIgZmlsbD0iI2U3ZTdlYSIvPgo8Y2lyY2xlIGN4PSI4NSIgY3k9IjY1IiByPSI2IiBmaWxsPSIjOWNhM2FmIi8+CjxjaXJjbGUgY3g9IjExNSIgY3k9IjY1IiByPSI2IiBmaWxsPSIjOWNhM2FmIi8+CjxwYXRoIGQ9Ik0gODUgOTUgUTEwMCAxMTAgMTE1IDk1IiBzdHJva2U9IiM5Y2EzYWYiIHN0cm9rZS13aWR0aD0iNCIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4K' },
+    { id: 'placeholder-4', name: 'Dr. Wellness', specialization: 'Specialist', avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjNmNGY2Ii8+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjgwIiByPSI0MCIgZmlsbD0iI2U3ZTdlYSIvPgo8Y2lyY2xlIGN4PSI4NSIgY3k9IjY1IiByPSI2IiBmaWxsPSIjOWNhM2FmIi8+CjxjaXJjbGUgY3g9IjExNSIgY3k9IjY1IiByPSI2IiBmaWxsPSIjOWNhM2FmIi8+CjxwYXRoIGQ9Ik0gODUgOTUgUTEwMCAxMTAgMTE1IDk1IiBzdHJva2U9IiM5Y2EzYWYiIHN0cm9rZS13aWR0aD0iNCIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4K' },
   ];
 
   const allDoctors = [
@@ -137,9 +145,9 @@ const LandingPage = () => {
   ];
 
   const staticClinics = [
-    { id: 'c1', name: 'City Central Clinic', facilityName: 'City Central Clinic', address: '123 Medical Avenue', rating: '4.8', reviews: '1.2k', image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=400' },
-    { id: 'c2', name: 'Mount Sinai Care', facilityName: 'Mount Sinai Care', address: 'Broadway, NY', rating: '4.9', reviews: '2.4k', image: 'https://images.unsplash.com/photo-1587854692152-cbe660dbbb88?q=80&w=400' },
-    { id: 'c3', name: 'Family Health Hub', facilityName: 'Family Health Hub', address: 'Downtown Center', rating: '4.7', reviews: '850', image: 'https://images.unsplash.com/photo-1626963014148-0c8e0061b48a?q=80&w=400' },
+    { id: 'c1', name: 'Islamabad Medical Complex', facilityName: 'Islamabad Medical Complex', address: 'Blue Area, Islamabad, Pakistan', rating: '4.8', reviews: '1.2k', image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=400' },
+    { id: 'c2', name: 'Lahore General Hospital', facilityName: 'Lahore General Hospital', address: 'Gulberg, Lahore, Pakistan', rating: '4.9', reviews: '2.4k', image: 'https://images.unsplash.com/photo-1587854692152-cbe660dbbb88?q=80&w=400' },
+    { id: 'c3', name: 'Karachi Health Center', facilityName: 'Karachi Health Center', address: 'Clifton, Karachi, Pakistan', rating: '4.7', reviews: '850', image: 'https://images.unsplash.com/photo-1626963014148-0c8e0061b48a?q=80&w=400' },
   ];
 
   const clinics = [
@@ -273,6 +281,7 @@ const LandingPage = () => {
               <div key={doc.id} className="w-[85vw] sm:w-auto shrink-0 snap-center sm:snap-none">
                 <DoctorListCard 
                   {...doc}
+                  address={doc.address}
                   isFav={isFavorite(doc.id, 'doctor')} 
                   onToggleFav={() => toggleFavorite(doc.id, 'doctor')}
                 />
@@ -289,43 +298,54 @@ const LandingPage = () => {
       </section>
 
       {/* ─── DIAMOND LIVE HIGHLIGHTS ─── */}
-      {diamondProviders.length > 0 && (
-        <section className="py-8 bg-slate-900">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6">
-            <div className="flex items-center justify-between mb-5">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-1.5 px-2.5 py-1 bg-red-500/20 rounded-lg">
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                  <span className="text-[10px] font-bold text-red-400 uppercase tracking-wider">Live</span>
-                </div>
-                <h2 className="text-lg font-bold text-white">Premium Live Consultations</h2>
+      <section className="py-8 bg-slate-900">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1.5 px-2.5 py-1 bg-red-500/20 rounded-lg">
+                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                <span className="text-[10px] font-bold text-red-400 uppercase tracking-wider">Live</span>
               </div>
-              <Link to="/streams" className="text-xs font-bold text-primary hover:underline">View All</Link>
+              <h2 className="text-lg font-bold text-white">Premium Live Consultations</h2>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {diamondProviders.slice(0, 4).map((p, i) => (
-                <Link key={i} to={`/stream/${p.id}`} className="group relative aspect-video rounded-xl overflow-hidden">
-                  <img src={p.avatar} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 brightness-75" alt={p.name} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                  <div className="absolute top-3 left-3 px-2 py-1 bg-black/40 backdrop-blur-sm rounded-md flex items-center gap-1.5">
-                    <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></div>
-                    <span className="text-[9px] font-bold text-white">2.4k</span>
-                  </div>
-                  <div className="absolute bottom-3 left-3 right-3">
-                    <h4 className="text-sm font-bold text-white leading-snug truncate">Dr. {p.name}</h4>
-                    <p className="text-[10px] text-slate-300 font-medium">{p.specialization}</p>
-                  </div>
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-lg">
-                      <Play className="w-5 h-5 text-white fill-white ml-0.5" />
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+            <Link to="/streams" className="text-xs font-bold text-primary hover:underline">View All</Link>
           </div>
-        </section>
-      )}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {(diamondProviders.length > 0 ? diamondProviders.slice(0, 4) : placeholderStreams.slice(0, 4)).map((p, i) => {
+              const isPlaceholder = !p.specialization || (p.id && typeof p.id === 'string' && p.id.startsWith('placeholder'));
+              return (
+                <Link key={i} to={isPlaceholder ? "#" : `/stream/${p.id || ''}`} className={`group relative aspect-video rounded-xl overflow-hidden ${isPlaceholder ? 'cursor-not-allowed opacity-75' : ''}`}>
+                  <img src={p.avatar} className={`w-full h-full object-cover ${!isPlaceholder ? 'group-hover:scale-105' : ''} transition-transform duration-500 brightness-75`} alt={p.name} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                  {!isPlaceholder && (
+                    <div className="absolute top-3 left-3 px-2 py-1 bg-black/40 backdrop-blur-sm rounded-md flex items-center gap-1.5">
+                      <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></div>
+                      <span className="text-[9px] font-bold text-white">2.4k</span>
+                    </div>
+                  )}
+                  {isPlaceholder && (
+                    <div className="absolute top-3 left-3 px-2 py-1 bg-slate-500/80 backdrop-blur-sm rounded-md flex items-center gap-1.5">
+                      <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                      <span className="text-[9px] font-bold text-white">Coming Soon</span>
+                    </div>
+                  )}
+                  <div className="absolute bottom-3 left-3 right-3">
+                    <h4 className="text-sm font-bold text-white leading-snug truncate">{p.name}</h4>
+                    <p className="text-[10px] text-slate-300 font-medium">{p.specialization || 'Specialist'}</p>
+                  </div>
+                  {!isPlaceholder && (
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-lg">
+                        <Play className="w-5 h-5 text-white fill-white ml-0.5" />
+                      </div>
+                    </div>
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
       {/* ─── CLINICS & PHARMACIES ─── */}
       <section className="py-8 bg-[#f8f9fc]">

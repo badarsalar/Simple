@@ -8,10 +8,10 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [providers, setProviders] = useState([]);
   const [medicines, setMedicines] = useState([
-    { id: 1, name: 'Panadol Extra', category: 'Painkillers', price: '12.50', rating: '4.8', image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1000' },
-    { id: 2, name: 'Amoxicillin 500mg', category: 'Antibiotics', price: '24.00', rating: '4.9', image: 'https://images.unsplash.com/photo-1587854692152-cbe660dbbb88?q=80&w=1000' },
-    { id: 3, name: 'Vitamin C 1000mg', category: 'Vitamins', price: '15.20', rating: '4.7', image: 'https://images.unsplash.com/photo-1626963014148-0c8e0061b48a?q=80&w=1000' },
-    { id: 4, name: 'Hydrating Cream', category: 'Skin Care', price: '32.00', rating: '5.0', image: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=1000' },
+    { id: 1, name: 'Panadol Extra', category: 'Painkillers', price: '150', rating: '4.8', image: '/images/placeholder.svg' },
+    { id: 2, name: 'Amoxicillin 500mg', category: 'Antibiotics', price: '240', rating: '4.9', image: '/images/placeholder.svg' },
+    { id: 3, name: 'Vitamin C 1000mg', category: 'Vitamins', price: '320', rating: '4.7', image: '/images/placeholder.svg' },
+    { id: 4, name: 'Cetirizine 10mg', category: 'Allergy Relief', price: '180', rating: '5.0', image: '/images/placeholder.svg' },
   ]);
   const [notifications, setNotifications] = useState([
     { id: 1, title: 'Appointment Confirmed', message: 'Your appointment with Dr. Adam Cooper is confirmed for tomorrow at 10:00 AM.', type: 'success', time: '2 mins ago', read: false },
@@ -46,35 +46,38 @@ export const AuthProvider = ({ children }) => {
       const initialProviders = [
         { 
           id: 1, 
-          name: 'Adam Cooper', 
+          name: 'Ahmed Khan', 
           role: 'doctor', 
           specialization: 'Oncology', 
-          avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=400', 
+          avatar: '/images/facilities/doctor-placeholder.svg', 
           subscription: { type: 'Diamond', active: true },
           hasActiveAds: true,
           rating: '5.0',
+          address: 'Shalimar Hospital, Lahore, Pakistan',
           metrics: { totalVisits: 1200, consultationHistory: { completed: 450 } }
         },
         { 
           id: 2, 
-          name: 'Sarah Johnson', 
+          name: 'Fatima Bibi', 
           role: 'doctor', 
           specialization: 'Cardiology', 
-          avatar: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=400', 
+          avatar: '/images/facilities/doctor-placeholder.svg', 
           subscription: { type: 'Gold', active: true },
           hasActiveAds: false,
           rating: '4.9',
+          address: 'Pakistan Institute of Medical Sciences, Islamabad',
           metrics: { totalVisits: 800, consultationHistory: { completed: 200 } }
         },
         { 
           id: 3, 
-          name: 'Lucas Grey', 
+          name: 'Muhammad Ali', 
           role: 'doctor', 
           specialization: 'Neurologist', 
-          avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=400', 
+          avatar: '/images/facilities/doctor-placeholder.svg', 
           subscription: { type: 'Free', active: true },
           hasActiveAds: true,
           rating: '4.7',
+          address: 'Jinnah Hospital, Lahore, Pakistan',
           metrics: { totalVisits: 300, consultationHistory: { completed: 50 } }
         },
         {
@@ -82,10 +85,11 @@ export const AuthProvider = ({ children }) => {
           name: 'Central City Clinic',
           facilityName: 'Central City Clinic',
           role: 'clinic',
-          avatar: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=400',
+          avatar: '/images/facilities/clinic-placeholder.svg',
           subscription: { type: 'Diamond', active: true },
           hasActiveAds: true,
-          rating: '5.0'
+          rating: '5.0',
+          address: 'Blue Area, Islamabad, Pakistan'
         }
       ];
       setProviders(initialProviders);

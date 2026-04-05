@@ -31,10 +31,12 @@ const Doctors = () => {
   ];
 
   const staticDoctors = [
-    { id: 1, name: "Dr. Adam Cooper", specialty: "Oncologist", rating: "5.0", reviews: "124", experience: "15", fee: "3500", image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=400", gender: "male" },
-    { id: 2, name: "Dr. Sarah Johnson", specialty: "Cardiologist", rating: "4.9", reviews: "89", experience: "12", fee: "2500", image: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=400", gender: "female" },
-    { id: 3, name: "Dr. Lucas Grey", specialty: "Neurologist", rating: "5.0", reviews: "56", experience: "10", fee: "4000", image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=400", gender: "male" },
-    { id: 4, name: "Dr. Emma Wilson", specialty: "Dermatologist", rating: "4.8", reviews: "210", experience: "8", fee: "2000", image: "https://images.unsplash.com/photo-1559839734-2b71f153678e?q=80&w=400", gender: "female" },
+    { id: 1, name: "Dr. Ahmed Khan", specialty: "Cardiologist", rating: "5.0", reviews: "124", experience: "15", fee: "3500", image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=400", gender: "male", address: "Shalimar Hospital, Lahore, Pakistan" },
+    { id: 2, name: "Dr. Fatima Bibi", specialty: "Gynecologist", rating: "4.9", reviews: "89", experience: "12", fee: "2500", image: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=400", gender: "female", address: "Pakistan Institute of Medical Sciences, Islamabad" },
+    { id: 3, name: "Dr. Muhammad Ali", specialty: "Neurologist", rating: "5.0", reviews: "56", experience: "10", fee: "4000", image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=400", gender: "male", address: "Jinnah Hospital, Lahore, Pakistan" },
+    { id: 4, name: "Dr. Ayesha Malik", specialty: "Dermatologist", rating: "4.8", reviews: "210", experience: "8", fee: "2000", image: "https://images.unsplash.com/photo-1559839734-2b71f153678e?q=80&w=400", gender: "female", address: "DHA Medical Center, Karachi, Pakistan" },
+    { id: 5, name: "Dr. Imran Qureshi", specialty: "Orthopedic Surgeon", rating: "4.7", reviews: "145", experience: "14", fee: "4500", image: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=400", gender: "male", address: "Orthopedic Hospital, Karachi, Pakistan" },
+    { id: 6, name: "Dr. Sara Ahmed", specialty: "Pediatrician", rating: "4.9", reviews: "178", experience: "9", fee: "1800", image: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=400", gender: "female", address: "Children's Hospital, Lahore, Pakistan" },
   ];
 
   const registeredDoctors = providers
@@ -47,7 +49,7 @@ const Doctors = () => {
       reviews: '12',
       experience: p.experience || '5',
       fee: p.consultationFee || '2000',
-      image: p.avatar || 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=400',
+      image: p.avatar || '/images/facilities/doctor-placeholder.svg',
       gender: p.gender || 'male'
     }));
 
@@ -278,6 +280,7 @@ const Doctors = () => {
                   <DoctorListCard 
                     key={doc.id}
                     {...doc}
+                    address={doc.address}
                     isFav={isFavorite(doc.id, 'doctor')} 
                     onToggleFav={(e) => {
                       e.preventDefault();

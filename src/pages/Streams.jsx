@@ -9,6 +9,94 @@ import {
 } from 'lucide-react';
 
 /* ─── Data ─── */
+const PLACEHOLDER_LIVE_STREAMS = [
+  {
+    id: 'placeholder-1',
+    host: 'Dr. Coming Soon',
+    specialty: 'Specialist',
+    avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjNmNGY2Ii8+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjgwIiByPSI0MCIgZmlsbD0iI2U3ZTdlYSIvPgo8Y2lyY2xlIGN4PSI4NSIgY3k9IjY1IiByPSI2IiBmaWxsPSIjOWNhM2FmIi8+CjxjaXJjbGUgY3g9IjExNSIgY3k9IjY1IiByPSI2IiBmaWxsPSIjOWNhM2FmIi8+CjxwYXRoIGQ9Ik0gODUgOTUgUTEwMCAxMTAgMTE1IDk1IiBzdHJva2U9IiM5Y2EzYWYiIHN0cm9rZS13aWR0aD0iNCIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4K',
+    thumbnail: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgdmlld0JveD0iMCAwIDgwMCA2MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjZjNmNGY2Ii8+Cjx0ZXh0IHg9IjQwMCIgeT0iMzAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOWNhM2FmIiBmb250LXNpemU9IjI0IiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjUwMCI+U3RyZWFtIENvbWluZyBTb29uPC90ZXh0Pgo8L3N2Zz4K',
+    title: 'Live Stream Coming Soon',
+    category: 'Health Education',
+    viewers: 0,
+    likes: 0,
+    isLive: false,
+    startedAt: 'Soon',
+    duration: '0 min',
+    verified: false,
+    guests: 0,
+    tag: null,
+    isPlaceholder: true,
+  },
+  {
+    id: 'placeholder-2',
+    host: 'Dr. Scheduled',
+    specialty: 'Specialist',
+    avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjNmNGY2Ii8+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjgwIiByPSI0MCIgZmlsbD0iI2U3ZTdlYSIvPgo8Y2lyY2xlIGN4PSI4NSIgY3k9IjY1IiByPSI2IiBmaWxsPSIjOWNhM2FmIi8+CjxjaXJjbGUgY3g9IjExNSIgY3k9IjY1IiByPSI2IiBmaWxsPSIjOWNhM2FmIi8+CjxwYXRoIGQ9Ik0gODUgOTUgUTEwMCAxMTAgMTE1IDk1IiBzdHJva2U9IiM5Y2EzYWYiIHN0cm9rZS13aWR0aD0iNCIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4K',
+    thumbnail: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgdmlld0JveD0iMCAwIDgwMCA2MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjZjNmNGY2Ii8+Cjx0ZXh0IHg9IjQwMCIgeT0iMzAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOWNhM2FmIiBmb250LXNpemU9IjI0IiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjUwMCI+U2NoZWR1bGVkIFN0cmVhbTwvdGV4dD4KPC9zdmc+Cg==',
+    title: 'Scheduled Live Session',
+    category: 'Medical Workshop',
+    viewers: 0,
+    likes: 0,
+    isLive: false,
+    startedAt: 'TBD',
+    duration: '0 min',
+    verified: false,
+    guests: 0,
+    tag: null,
+    isPlaceholder: true,
+  },
+  {
+    id: 'placeholder-3',
+    host: 'Dr. Interactive',
+    specialty: 'Specialist',
+    avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjNmNGY2Ii8+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjgwIiByPSI0MCIgZmlsbD0iI2U3ZTdlYSIvPgo8Y2lyY2xlIGN4PSI4NSIgY3k9IjY1IiByPSI2IiBmaWxsPSIjOWNhM2FmIi8+CjxjaXJjbGUgY3g9IjExNSIgY3k9IjY1IiByPSI2IiBmaWxsPSIjOWNhM2FmIi8+CjxwYXRoIGQ9Ik0gODUgOTUgUTEwMCAxMTAgMTE1IDk1IiBzdHJva2U9IiM5Y2EzYWYiIHN0cm9rZS13aWR0aD0iNCIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4K',
+    thumbnail: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgdmlld0JveD0iMCAwIDgwMCA2MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjZjNmNGY2Ii8+Cjx0ZXh0IHg9IjQwMCIgeT0iMzAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOWNhM2FmIiBmb250LXNpemU9IjI0IiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjUwMCI+SW50ZXJhY3RpdmUgU2Vzc2lvbjwvdGV4dD4KPC9zdmc+Cg==',
+    title: 'Interactive Health Discussion',
+    category: 'Q&A Session',
+    viewers: 0,
+    likes: 0,
+    isLive: false,
+    startedAt: 'Soon',
+    duration: '0 min',
+    verified: false,
+    guests: 0,
+    tag: null,
+    isPlaceholder: true,
+  },
+];
+
+const PLACEHOLDER_UPCOMING_STREAMS = [
+  {
+    id: 'upcoming-placeholder-1',
+    host: 'Dr. Wellness',
+    specialty: 'General Physician',
+    avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjNmNGY2Ii8+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjgwIiByPSI0MCIgZmlsbD0iI2U3ZTdlYSIvPgo8Y2lyY2xlIGN4PSI4NSIgY3k9IjY1IiByPSI2IiBmaWxsPSIjOWNhM2FmIi8+CjxjaXJjbGUgY3g9IjExNSIgY3k9IjY1IiByPSI2IiBmaWxsPSIjOWNhM2FmIi8+CjxwYXRoIGQ9Ik0gODUgOTUgUTEwMCAxMTAgMTE1IDk1IiBzdHJva2U9IiM5Y2EzYWYiIHN0cm9rZS13aWR0aD0iNCIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4K',
+    thumbnail: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgdmlld0JveD0iMCAwIDgwMCA2MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjZjNmNGY2Ii8+Cjx0ZXh0IHg9IjQwMCIgeT0iMzAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOWNhM2FmIiBmb250LXNpemU9IjI0IiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjUwMCI+V2VsbG5lc3MgVGFsa3wvdGV4dD4KPC9zdmc+Cg==',
+    title: 'Daily Wellness Talk',
+    category: 'Health Education',
+    date: 'TBD',
+    time: 'TBD',
+    registrations: 0,
+    verified: false,
+    isPlaceholder: true,
+  },
+  {
+    id: 'upcoming-placeholder-2',
+    host: 'Dr. Nutrition',
+    specialty: 'Nutritionist',
+    avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjNmNGY2Ii8+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjgwIiByPSI0MCIgZmlsbD0iI2U3ZTdlYSIvPgo8Y2lyY2xlIGN4PSI4NSIgY3k9IjY1IiByPSI2IiBmaWxsPSIjOWNhM2FmIi8+CjxjaXJjbGUgY3g9IjExNSIgY3k9IjY1IiByPSI2IiBmaWxsPSIjOWNhM2FmIi8+CjxwYXRoIGQ9Ik0gODUgOTUgUTEwMCAxMTAgMTE1IDk1IiBzdHJva2U9IiM5Y2EzYWYiIHN0cm9rZS13aWR0aD0iNCIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4K',
+    thumbnail: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgdmlld0JveD0iMCAwIDgwMCA2MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNjAwIiBmaWxsPSIjZjNmNGY2Ii8+Cjx0ZXh0IHg9IjQwMCIgeT0iMzAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOWNhM2FmIiBmb250LXNpemU9IjI0IiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjUwMCI+TnV0cml0aW9uIFdvcmtzaG9wPC90ZXh0Pgo8L3N2Zz4K',
+    title: 'Nutrition Workshop',
+    category: 'Medical Workshop',
+    date: 'TBD',
+    time: 'TBD',
+    registrations: 0,
+    verified: false,
+    isPlaceholder: true,
+  },
+];
+
 const LIVE_STREAMS = [
   {
     id: 'live-dr-cooper-001',
@@ -132,10 +220,15 @@ const ViewerCount = ({ count, className = '' }) => (
 
 const FeaturedStreamCard = ({ stream }) => {
   const [hovered, setHovered] = useState(false);
+  const isPlaceholder = stream.isPlaceholder;
+  
+  const CardWrapper = isPlaceholder ? 'div' : Link;
+  const cardProps = isPlaceholder ? {} : { to: `/stream/${stream.id}` };
+  
   return (
-    <Link
-      to={`/stream/${stream.id}`}
-      className="group relative block rounded-3xl overflow-hidden shadow-2xl bg-black"
+    <CardWrapper
+      {...cardProps}
+      className={`group relative block rounded-3xl overflow-hidden shadow-2xl bg-black ${isPlaceholder ? 'cursor-not-allowed opacity-75' : ''}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -143,25 +236,32 @@ const FeaturedStreamCard = ({ stream }) => {
         <img
           src={stream.thumbnail}
           alt={stream.title}
-          className={`w-full h-full object-cover transition-transform duration-700 ${hovered ? 'scale-105' : 'scale-100'}`}
+          className={`w-full h-full object-cover transition-transform duration-700 ${hovered && !isPlaceholder ? 'scale-105' : 'scale-100'}`}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
 
         {/* Top Bar */}
         <div className="absolute top-4 left-4 right-4 flex items-start justify-between">
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 bg-rose-500 text-white px-3 py-1.5 rounded-full text-[10px] font-bold shadow-lg shadow-rose-500/40">
-              <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
-              LIVE
-            </div>
-            {stream.tag && (
+            {isPlaceholder ? (
+              <div className="flex items-center gap-1.5 bg-slate-500 text-white px-3 py-1.5 rounded-full text-[10px] font-bold">
+                <span className="w-1.5 h-1.5 bg-white rounded-full" />
+                COMING SOON
+              </div>
+            ) : (
+              <div className="flex items-center gap-1.5 bg-rose-500 text-white px-3 py-1.5 rounded-full text-[10px] font-bold shadow-lg shadow-rose-500/40">
+                <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+                LIVE
+              </div>
+            )}
+            {stream.tag && !isPlaceholder && (
               <div className={`px-3 py-1.5 rounded-full text-[10px] font-bold shadow ${stream.tag === 'Trending' ? 'bg-amber-400 text-amber-900' : 'bg-primary text-white'}`}>
                 {stream.tag === 'Trending' ? <Flame className="w-3 h-3 inline mr-1" /> : null}
                 {stream.tag}
               </div>
             )}
           </div>
-          <ViewerCount count={stream.viewers} className="bg-black/60 backdrop-blur-sm text-white px-3 py-1.5 rounded-full" />
+          {!isPlaceholder && <ViewerCount count={stream.viewers} className="bg-black/60 backdrop-blur-sm text-white px-3 py-1.5 rounded-full" />}
         </div>
 
         {/* Guest bubbles */}
@@ -181,7 +281,7 @@ const FeaturedStreamCard = ({ stream }) => {
 
         {/* Bottom Info */}
         <div className="absolute bottom-0 left-0 right-0 p-6">
-          <span className="inline-block px-2.5 py-1 bg-primary/80 backdrop-blur-sm text-white rounded-lg text-[9px] font-bold mb-3">
+          <span className={`inline-block px-2.5 py-1 backdrop-blur-sm text-white rounded-lg text-[9px] font-bold mb-3 ${isPlaceholder ? 'bg-slate-500/80' : 'bg-primary/80'}`}>
             {stream.category}
           </span>
           <h3 className="text-xl font-bold text-white leading-snug mb-3">{stream.title}</h3>
@@ -190,91 +290,112 @@ const FeaturedStreamCard = ({ stream }) => {
             <div>
               <p className="text-white font-bold text-sm flex items-center gap-1">
                 {stream.host}
-                {stream.verified && <CheckCircle className="w-3.5 h-3.5 text-primary fill-primary" />}
+                {stream.verified && !isPlaceholder && <CheckCircle className="w-3.5 h-3.5 text-primary fill-primary" />}
               </p>
-              <p className="text-white/50 text-[10px] font-medium">{stream.specialty} · Started {stream.startedAt}</p>
+              <p className="text-white/50 text-[10px] font-medium">
+                {stream.specialty} · {isPlaceholder ? 'Coming Soon' : `Started ${stream.startedAt}`}
+              </p>
             </div>
-            <div className="ml-auto flex items-center gap-3 text-white/60 text-xs font-bold">
-              <span className="flex items-center gap-1"><Heart className="w-3 h-3 text-rose-400" /> {stream.likes.toLocaleString()}</span>
-              <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {stream.duration}</span>
-            </div>
+            {!isPlaceholder && (
+              <div className="ml-auto flex items-center gap-3 text-white/60 text-xs font-bold">
+                <span className="flex items-center gap-1"><Heart className="w-3 h-3 text-rose-400" /> {stream.likes.toLocaleString()}</span>
+                <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {stream.duration}</span>
+              </div>
+            )}
           </div>
         </div>
       </div>
-    </Link>
+    </CardWrapper>
   );
 };
 
-const LiveStreamCard = ({ stream }) => (
-  <Link to={`/stream/${stream.id}`} className="group block bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all hover:-translate-y-1">
-    <div className="relative aspect-video overflow-hidden bg-slate-900">
-      <img src={stream.thumbnail} alt={stream.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+const LiveStreamCard = ({ stream }) => {
+  const isPlaceholder = stream.isPlaceholder;
+  const CardWrapper = isPlaceholder ? 'div' : Link;
+  const cardProps = isPlaceholder ? {} : { to: `/stream/${stream.id}` };
+  
+  return (
+    <CardWrapper {...cardProps} className={`group block bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all ${isPlaceholder ? 'cursor-not-allowed opacity-75' : 'hover:-translate-y-1'}`}>
+      <div className="relative aspect-video overflow-hidden bg-slate-900">
+        <img src={stream.thumbnail} alt={stream.title} className={`w-full h-full object-cover ${!isPlaceholder ? 'group-hover:scale-105' : ''} transition-transform duration-700`} />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
 
-      <div className="absolute top-3 left-3 flex items-center gap-2">
-        <div className="flex items-center gap-1.5 bg-rose-500 text-white px-2.5 py-1 rounded-xl text-[10px] font-bold shadow-lg shadow-rose-500/40">
-          <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
-          LIVE
+        <div className="absolute top-3 left-3 flex items-center gap-2">
+          {isPlaceholder ? (
+            <div className="flex items-center gap-1.5 bg-slate-500 text-white px-2.5 py-1 rounded-xl text-[10px] font-bold">
+              <span className="w-1.5 h-1.5 bg-white rounded-full" />
+              COMING SOON
+            </div>
+          ) : (
+            <div className="flex items-center gap-1.5 bg-rose-500 text-white px-2.5 py-1 rounded-xl text-[10px] font-bold shadow-lg shadow-rose-500/40">
+              <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+              LIVE
+            </div>
+          )}
+          {stream.tag && !isPlaceholder && (
+            <div className={`px-2.5 py-1 rounded-xl text-[10px] font-bold ${stream.tag === 'Trending' ? 'bg-amber-400 text-amber-900' : 'bg-primary text-white'}`}>
+              {stream.tag}
+            </div>
+          )}
         </div>
-        {stream.tag && (
-          <div className={`px-2.5 py-1 rounded-xl text-[10px] font-bold ${stream.tag === 'Trending' ? 'bg-amber-400 text-amber-900' : 'bg-primary text-white'}`}>
-            {stream.tag}
+
+        {!isPlaceholder && <ViewerCount count={stream.viewers} className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white px-2.5 py-1 rounded-xl" />}
+
+        {!isPlaceholder && (
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white/40">
+              <Play className="w-6 h-6 text-white fill-white ml-0.5" />
+            </div>
           </div>
         )}
-      </div>
 
-      <ViewerCount count={stream.viewers} className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white px-2.5 py-1 rounded-xl" />
-
-      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-        <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white/40">
-          <Play className="w-6 h-6 text-white fill-white ml-0.5" />
+        <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between">
+          <div className="flex items-center gap-2">
+            <img src={stream.avatar} alt={stream.host} className="w-7 h-7 rounded-lg border-2 border-white/30 object-cover" />
+            <div>
+              <p className="text-white font-bold text-xs flex items-center gap-1">
+                {stream.host}
+                {stream.verified && !isPlaceholder && <CheckCircle className="w-3 h-3 text-primary fill-primary" />}
+              </p>
+              <p className="text-white/50 text-[9px] font-medium">{stream.specialty}</p>
+            </div>
+          </div>
+          {!isPlaceholder && <span className="text-white/60 text-[9px] font-medium bg-black/40 px-2 py-0.5 rounded-lg">{stream.duration}</span>}
         </div>
       </div>
 
-      <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between">
+      <div className="p-4 space-y-2.5">
         <div className="flex items-center gap-2">
-          <img src={stream.avatar} alt={stream.host} className="w-7 h-7 rounded-lg border-2 border-white/30 object-cover" />
-          <div>
-            <p className="text-white font-bold text-xs flex items-center gap-1">
-              {stream.host}
-              {stream.verified && <CheckCircle className="w-3 h-3 text-primary fill-primary" />}
-            </p>
-            <p className="text-white/50 text-[9px] font-medium">{stream.specialty}</p>
-          </div>
+          <span className={`px-2 py-0.5 rounded-lg text-[9px] font-bold ${isPlaceholder ? 'bg-slate-100 text-slate-500' : 'bg-primary/10 text-primary'}`}>{stream.category}</span>
+          {stream.guests > 0 && !isPlaceholder && (
+            <span className="px-2 py-0.5 bg-slate-100 text-slate-500 rounded-lg text-[9px] font-bold flex items-center gap-1">
+              <Users className="w-2.5 h-2.5" /> {stream.guests} guests
+            </span>
+          )}
         </div>
-        <span className="text-white/60 text-[9px] font-medium bg-black/40 px-2 py-0.5 rounded-lg">{stream.duration}</span>
+        <h3 className={`font-bold text-dark text-sm leading-snug line-clamp-2 transition-colors ${!isPlaceholder ? 'group-hover:text-primary' : ''}`}>{stream.title}</h3>
+        <div className="flex items-center justify-between text-[10px] font-bold text-slate-400">
+          {!isPlaceholder && <span className="flex items-center gap-1 text-rose-500"><Heart className="w-3 h-3" />{stream.likes.toLocaleString()}</span>}
+          <span className="text-slate-300">{isPlaceholder ? 'Coming Soon' : `Started ${stream.startedAt}`}</span>
+        </div>
       </div>
-    </div>
-
-    <div className="p-4 space-y-2.5">
-      <div className="flex items-center gap-2">
-        <span className="px-2 py-0.5 bg-primary/10 text-primary rounded-lg text-[9px] font-bold">{stream.category}</span>
-        {stream.guests > 0 && (
-          <span className="px-2 py-0.5 bg-slate-100 text-slate-500 rounded-lg text-[9px] font-bold flex items-center gap-1">
-            <Users className="w-2.5 h-2.5" /> {stream.guests} guests
-          </span>
-        )}
-      </div>
-      <h3 className="font-bold text-dark text-sm leading-snug line-clamp-2 group-hover:text-primary transition-colors">{stream.title}</h3>
-      <div className="flex items-center justify-between text-[10px] font-bold text-slate-400">
-        <span className="flex items-center gap-1 text-rose-500"><Heart className="w-3 h-3" />{stream.likes.toLocaleString()}</span>
-        <span className="text-slate-300">Started {stream.startedAt}</span>
-      </div>
-    </div>
-  </Link>
-);
+    </CardWrapper>
+  );
+};
 
 const UpcomingStreamCard = ({ stream }) => {
   const [notified, setNotified] = useState(false);
+  const isPlaceholder = stream.isPlaceholder;
+  
   return (
-    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg transition-all group overflow-hidden">
+    <div className={`bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg transition-all group overflow-hidden ${isPlaceholder ? 'opacity-75' : ''}`}>
       <div className="relative aspect-[16/6] overflow-hidden bg-slate-900">
-        <img src={stream.thumbnail} alt={stream.title} className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" />
+        <img src={stream.thumbnail} alt={stream.title} className={`w-full h-full object-cover opacity-60 ${!isPlaceholder ? 'group-hover:opacity-80' : ''} transition-opacity`} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
         <div className="absolute top-3 left-3">
           <span className="px-2.5 py-1 bg-slate-800/80 backdrop-blur-sm text-white rounded-xl text-[9px] font-bold flex items-center gap-1.5">
             <Clock className="w-2.5 h-2.5 text-amber-400" />
-            {stream.date} • {stream.time}
+            {isPlaceholder ? 'TBD' : `${stream.date} • ${stream.time}`}
           </span>
         </div>
       </div>
@@ -282,26 +403,31 @@ const UpcomingStreamCard = ({ stream }) => {
         <img src={stream.avatar} alt={stream.host} className="w-12 h-12 rounded-2xl object-cover shrink-0 border border-slate-100" />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <span className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-lg text-[9px] font-bold">{stream.category}</span>
+            <span className={`px-2 py-0.5 rounded-lg text-[9px] font-bold ${isPlaceholder ? 'bg-slate-100 text-slate-500' : 'bg-slate-100 text-slate-600'}`}>{stream.category}</span>
           </div>
           <h3 className="font-bold text-dark text-sm leading-snug truncate">{stream.title}</h3>
           <p className="text-[10px] text-slate-400 font-medium mt-0.5 flex items-center gap-1">
             {stream.host}
-            {stream.verified && <CheckCircle className="w-3 h-3 text-primary fill-primary" />}
+            {stream.verified && !isPlaceholder && <CheckCircle className="w-3 h-3 text-primary fill-primary" />}
             · {stream.specialty}
           </p>
           <div className="flex items-center gap-1 mt-1 text-[9px] text-slate-400 font-bold">
-            <Bell className="w-2.5 h-2.5 text-amber-500" /> {stream.registrations.toLocaleString()} registered
+            <Bell className="w-2.5 h-2.5 text-amber-500" /> {isPlaceholder ? '0' : stream.registrations.toLocaleString()} registered
           </div>
         </div>
         <button
-          onClick={() => setNotified(n => !n)}
+          onClick={() => !isPlaceholder && setNotified(n => !n)}
+          disabled={isPlaceholder}
           className={`shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
-            notified ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-primary/10 text-primary hover:bg-primary hover:text-white'
+            isPlaceholder 
+              ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
+              : notified 
+                ? 'bg-primary text-white shadow-lg shadow-primary/20' 
+                : 'bg-primary/10 text-primary hover:bg-primary hover:text-white'
           }`}
         >
           <Bell className="w-3 h-3" />
-          {notified ? 'Notified' : 'Notify'}
+          {isPlaceholder ? 'Coming Soon' : (notified ? 'Notified' : 'Notify')}
         </button>
       </div>
     </div>
@@ -312,7 +438,12 @@ const UpcomingStreamCard = ({ stream }) => {
 const Streams = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [totalViewers, setTotalViewers] = useState(LIVE_STREAMS.reduce((a, s) => a + s.viewers, 0));
+  
+  // Use placeholders if no real streams are available
+  const activeLiveStreams = LIVE_STREAMS.length > 0 ? LIVE_STREAMS : PLACEHOLDER_LIVE_STREAMS;
+  const activeUpcomingStreams = UPCOMING_STREAMS.length > 0 ? UPCOMING_STREAMS : PLACEHOLDER_UPCOMING_STREAMS;
+  
+  const [totalViewers, setTotalViewers] = useState(activeLiveStreams.reduce((a, s) => a + s.viewers, 0));
 
   // Simulate live viewer fluctuation
   useEffect(() => {
@@ -322,9 +453,9 @@ const Streams = () => {
     return () => clearInterval(iv);
   }, []);
 
-  const featuredStream = LIVE_STREAMS[0];
+  const featuredStream = activeLiveStreams[0];
 
-  const filteredLive = LIVE_STREAMS.filter(s => {
+  const filteredLive = activeLiveStreams.filter(s => {
     const matchesSearch = s.title.toLowerCase().includes(searchQuery.toLowerCase()) || s.host.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === 'All' || s.category === selectedCategory;
     return matchesSearch && matchesCategory;
@@ -346,7 +477,7 @@ const Streams = () => {
             <div className="flex-1 text-center lg:text-left space-y-6">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-rose-500/15 border border-rose-500/20 rounded-full">
                 <span className="w-2 h-2 bg-rose-500 rounded-full animate-pulse" />
-                <span className="text-rose-400 text-xs font-bold uppercase tracking-widest">{LIVE_STREAMS.length} streams live right now</span>
+                <span className="text-rose-400 text-xs font-bold uppercase tracking-widest">{activeLiveStreams.length} streams live right now</span>
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
@@ -474,12 +605,12 @@ const Streams = () => {
               <Clock className="w-5 h-5 text-primary" />
               <h2 className="text-2xl font-bold text-dark">Upcoming Streams</h2>
               <span className="px-2.5 py-1 bg-primary/10 text-primary text-[10px] font-bold rounded-xl">
-                {UPCOMING_STREAMS.length} scheduled
+                {activeUpcomingStreams.length} scheduled
               </span>
             </div>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-            {UPCOMING_STREAMS.map(stream => (
+            {activeUpcomingStreams.map(stream => (
               <UpcomingStreamCard key={stream.id} stream={stream} />
             ))}
           </div>

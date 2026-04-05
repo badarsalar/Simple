@@ -22,6 +22,8 @@ import PharmacyDetails from './pages/PharmacyDetails';
 import ProviderProfile from './pages/ProviderProfile';
 import BookAppointment from './pages/BookAppointment';
 import Orders from './pages/Orders';
+import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
 import Stream from './pages/Stream';
 import LiveStreams from './pages/LiveStreams';
 
@@ -47,13 +49,15 @@ function App() {
             <Route path="/doctors" element={<Doctors />} />
             <Route path="/clinics" element={<Clinics />} />
             <Route path="/clinic/:id" element={<ClinicDetails />} />
-            <Route path="/medicines" element={<Medicines />} />
+            <Route path="/medicines" element={<Navigate to="/pharmacies" />} />
             <Route path="/medicine/:id" element={<MedicineDetails />} />
             <Route path="/pharmacies" element={<Pharmacies />} />
             <Route path="/pharmacy/:id" element={<PharmacyDetails />} />
             <Route path="/profile/:id" element={<ProviderProfile />} />
             <Route path="/book/:id" element={<BookAppointment />} />
             <Route path="/orders" element={<Orders />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
             
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" />} />

@@ -2,10 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Bell, LogOut, Search, MapPin, Pill, Activity, ShoppingBag, Phone, ChevronDown } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, logout, getGlobalSearchItems, notifications, markNotificationRead, clearNotifications } = useAuth();
+  const { cartCount } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
   const dropdownRef = useRef(null);
@@ -53,7 +55,6 @@ const Navbar = () => {
     { name: 'Doctors', path: '/doctors' },
     { name: 'Clinics', path: '/clinics' },
     { name: 'Pharmacies', path: '/pharmacies' },
-    { name: 'Medicines', path: '/medicines' },
     { name: 'Streams', path: '/streams' },
   ];
 
@@ -112,6 +113,19 @@ const Navbar = () => {
 
           {user ? (
             <div className="flex items-center gap-2">
+              {/* Cart */}
+              <Link
+                to="/cart"
+                className="p-2 text-slate-500 hover:text-primary hover:bg-slate-50 rounded-lg transition-colors relative"
+              >
+                <ShoppingBag className="w-5 h-5" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-rose-500 rounded-full text-white text-[10px] font-bold flex items-center justify-center border-2 border-white">
+                    {cartCount > 99 ? '99+' : cartCount}
+                  </span>
+                )}
+              </Link>
+
               {/* Notifications */}
               <div className="relative" ref={notifRef}>
                 <button 
@@ -231,6 +245,22 @@ const Navbar = () => {
                 {link.name}
               </Link>
             ))}
+            {user && (
+              <Link 
+                to="/cart"
+                className={`block px-3 py-3 rounded-lg text-sm font-semibold transition-colors flex items-center justify-between ${
+                  location.pathname === '/cart' ? 'text-primary bg-primary/5' : 'text-slate-600 hover:bg-slate-50'
+                }`}
+                onClick={() => setIsOpen(false)}
+              >
+                <span>Cart</span>
+                {cartCount > 0 && (
+                  <span className="bg-rose-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                    {cartCount > 99 ? '99+' : cartCount}
+                  </span>
+                )}
+              </Link>
+            )}
           </div>
           {!user && (
             <div className="mt-8 space-y-2">
