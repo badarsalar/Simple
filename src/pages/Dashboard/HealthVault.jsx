@@ -17,7 +17,9 @@ import {
   AlertCircle,
   ArrowRight,
   RefreshCw,
-  Calendar
+  Calendar,
+  MoreHorizontal,
+  FileCheck
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useDashboard } from '../../context/DashboardContext';
@@ -239,7 +241,7 @@ const HealthVault = () => {
                           {record.type === 'Digital' ? <FileText className="w-8 h-8" /> : <ImageIcon className="w-8 h-8" />}
                        </div>
                        <div className="flex items-center gap-3">
-                          <button onClick={() => deleteChat(record.id)} className="p-3 bg-rose-50 rounded-2xl text-rose-500 hover:bg-rose-500 hover:text-white transition-all group/hdr">
+                          <button onClick={() => deleteVaultRecord(record.id)} className="p-3 bg-rose-50 rounded-2xl text-rose-500 hover:bg-rose-500 hover:text-white transition-all group/hdr">
                              <Trash2 className="w-5 h-5" />
                           </button>
                           <button className="hidden sm:block p-3 bg-slate-50 rounded-2xl text-slate-400 hover:text-primary transition-all">

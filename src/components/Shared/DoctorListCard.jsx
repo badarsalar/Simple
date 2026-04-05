@@ -107,15 +107,13 @@ const DoctorListCard = ({
             </div>
             <div className="flex items-center gap-2">
               <button
-                onClick={e => { e.preventDefault(); }}
                 className="hidden sm:flex items-center gap-1 px-3 py-1.5 bg-primary/5 text-primary border border-primary/10 rounded-lg text-[11px] font-bold hover:bg-primary/10 transition-colors"
               >
                 <Video className="w-3 h-3" />
                 Video
               </button>
               <button
-                onClick={e => { e.preventDefault(); }}
-                className="px-4 py-1.5 bg-primary text-white rounded-lg text-[11px] font-bold hover:bg-primary/90 active:scale-95 transition-all shadow-sm shadow-primary/20"
+                className="px-4 py-1.5 bg-primary text-white rounded-lg text-[11px] font-bold hover:bg-primary/90 transition-all shadow-sm shadow-primary/20"
               >
                 Book Appt
               </button>
