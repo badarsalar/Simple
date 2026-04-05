@@ -11,16 +11,19 @@ import {
   Video,
   MapPin,
   Stethoscope,
-  Info
+  Info,
+  Lock
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useDashboard } from '../context/DashboardContext';
+import { useAuth } from '../context/AuthContext';
 
 const BookAppointment = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addAppointment } = useDashboard();
+  const { user } = useAuth();
   
   const [selectedDate, setSelectedDate] = useState(0);
   const [selectedSlot, setSelectedSlot] = useState(null);
@@ -69,6 +72,42 @@ const BookAppointment = () => {
       navigate('/dashboard/appointments');
     }, 1500);
   };
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-[#f8f9fc] flex flex-col">
+        <Navbar />
+        <div className="flex-1 flex items-center justify-center pt-24 pb-20">
+          <div className="max-w-lg mx-auto px-6 text-center">
+            <div className="w-24 h-24 bg-white rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-xl shadow-primary/5 border border-slate-100">
+              <Lock className="w-10 h-10 text-primary" />
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-black italic uppercase tracking-tighter text-dark mb-4">
+              Booking <span className="text-primary tracking-tighter italic">Locked</span>
+            </h2>
+            <p className="text-slate-500 font-bold mb-10 text-xs sm:text-sm uppercase tracking-widest leading-relaxed">
+              Please sign in to securely book appointments and manage your healthcare schedule in your personalized dashboard.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link 
+                to="/login" 
+                className="px-8 py-5 bg-primary text-white rounded-[2rem] font-black uppercase text-xs tracking-widest hover:bg-dark transition-all shadow-2xl shadow-primary/20 active:scale-95"
+              >
+                Sign In to Book
+              </Link>
+              <Link 
+                to="/signup" 
+                className="px-8 py-5 bg-white text-dark rounded-[2rem] font-black uppercase text-xs tracking-widest border-2 border-slate-100 hover:border-slate-200 hover:bg-slate-50 transition-all active:scale-95"
+              >
+                Create Account
+              </Link>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f8f9fc] selection:bg-primary/10">
