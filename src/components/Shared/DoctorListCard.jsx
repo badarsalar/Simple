@@ -112,11 +112,12 @@ const DoctorListCard = ({
                 <Video className="w-3 h-3" />
                 Video
               </button>
-              <button
+              <Link
+                to={`/book/${id}`}
                 className="px-4 py-1.5 bg-primary text-white rounded-lg text-[11px] font-bold hover:bg-primary/90 transition-all shadow-sm shadow-primary/20"
               >
                 Book Appt
-              </button>
+              </Link>
             </div>
           </div>
         </div>

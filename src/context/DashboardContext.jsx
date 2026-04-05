@@ -103,6 +103,10 @@ export const DashboardProvider = ({ children }) => {
   }, [chats]);
 
   // Actions
+  const addAppointment = (appointment) => {
+    setAppointments(prev => [{ ...appointment, id: Date.now(), status: 'confirmed' }, ...prev]);
+  };
+
   const cancelAppointment = (id) => {
     setAppointments(prev => prev.map(app => 
       app.id === id ? { ...app, status: 'cancelled' } : app
@@ -210,6 +214,7 @@ export const DashboardProvider = ({ children }) => {
     updateProfile,
     sendMessage,
     startChatWithProvider,
+    addAppointment,
     deleteMessage,
     deleteChat
   };

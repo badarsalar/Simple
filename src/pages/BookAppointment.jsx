@@ -2,430 +2,275 @@ import React, { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { 
   ArrowLeft, 
-  MapPin, 
-  Video, 
   Clock, 
   Calendar,
   CheckCircle2, 
   Star,
   ChevronRight,
-  User,
-  ShieldCheck
+  ShieldCheck,
+  Video,
+  MapPin,
+  Stethoscope,
+  Info
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-
-const generateDates = () => {
-  const dates = [];
-  const today = new Date();
-  for (let i = 0; i < 14; i++) {
-    const d = new Date(today);
-    d.setDate(today.getDate() + i);
-    dates.push(d);
-  }
-  return dates;
-};
+import { useDashboard } from '../context/DashboardContext';
 
 const BookAppointment = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { addAppointment } = useDashboard();
   
-  const [step, setStep] = useState(1); // 1: Consultation & Time, 2: Patient Details, 3: Confirmation
   const [selectedDate, setSelectedDate] = useState(0);
   const [selectedSlot, setSelectedSlot] = useState(null);
-  const [isOnline, setIsOnline] = useState(true);
-  const [paymentMethod, setPaymentMethod] = useState('online');
-  
-  const [patientData, setPatientData] = useState({
-    name: '',
-    phone: '',
-    age: '',
-    gender: '',
-    notes: ''
-  });
+  const [consultType, setConsultType] = useState('Video');
+  const [isBooking, setIsBooking] = useState(false);
 
-  const dates = generateDates();
+  // Mock Data - In real app, fetch based on ID
+  const doctor = {
+    id: id,
+    name: "Dr. Saira Jabeen",
+    specialty: "Oncologist",
+    image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=400",
+    rating: "4.9",
+    reviews: "1,240",
+    fee: "2,000",
+    availability: "Mon, Wed, Fri",
+    timing: "09:00 AM - 05:00 PM"
+  };
 
-  const selectedDateStr = dates[selectedDate]?.toISOString().split('T')[0];
-  const dynamicSlots = ['10:30 AM', '11:15 AM', '02:30 PM', '04:45 PM', '06:30 PM', '09:15 PM'];
-  
-  const morningSlots = dynamicSlots.filter(s => s.includes('AM'));
-  const afternoonSlots = dynamicSlots.filter(s => s.includes('PM') && parseInt(s.split(':')[0]) < 6 && parseInt(s.split(':')[0]) !== 12);
-  const eveningSlots = dynamicSlots.filter(s => s.includes('PM') && (parseInt(s.split(':')[0]) >= 6 || parseInt(s.split(':')[0]) === 12));
+  const dates = [];
+  const today = new Date();
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    dates.push(d);
+  }
 
-  const handleNextStep = () => {
-    if (step === 1 && selectedSlot) setStep(2);
-    else if (step === 2 && patientData.name && patientData.phone) setStep(3);
+  const slots = ['09:00 AM', '10:30 AM', '11:15 AM', '02:00 PM', '03:45 PM', '05:00 PM'];
+
+  const handleConfirmBooking = () => {
+    if (!selectedSlot) return;
+    setIsBooking(true);
+    
+    // Direct Booking Logic
+    const newAppt = {
+      doctor: doctor.name,
+      specialty: doctor.specialty,
+      date: dates[selectedDate].toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+      time: selectedSlot,
+      type: consultType,
+      image: doctor.image
+    };
+
+    setTimeout(() => {
+      addAppointment(newAppt);
+      navigate('/dashboard/appointments');
+    }, 1500);
   };
 
   return (
-    <div className="min-h-screen bg-[#f8f9fc]">
+    <div className="min-h-screen bg-[#f8f9fc] selection:bg-primary/10">
       <Navbar />
       
-      <div className="pt-20 pb-12 max-w-4xl mx-auto px-4 sm:px-6">
+      <div className="pt-24 pb-20 max-w-5xl mx-auto px-4 sm:px-6">
         
-        {/* ... (breadcrumb and back button unchanged) ... */}
-        {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 mb-6">
-          <Link to="/" className="hover:text-primary">Home</Link>
-          <ChevronRight className="w-3 h-3" />
-          <Link to={`/profile/${id}`} className="hover:text-primary">Doctor Profile</Link>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-dark">Book Appointment</span>
-        </div>
-
-        <button 
-          onClick={() => step > 1 ? setStep(step - 1) : navigate(-1)}
-          className="flex items-center gap-2 text-slate-500 font-bold hover:text-primary transition-all mb-6 text-sm"
-        >
-          <ArrowLeft className="w-4 h-4" /> {step > 1 ? 'Back to previous step' : 'Back to Profile'}
-        </button>
-
-        {/* Multi-step progress tracker */}
-        <div className="flex items-center justify-between mb-8 relative">
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-slate-200 -z-10 rounded-full"></div>
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-primary -z-10 rounded-full transition-all duration-300" style={{ width: step === 1 ? '0%' : step === 2 ? '50%' : '100%' }}></div>
+        <div className="flex flex-col lg:flex-row gap-8 items-start">
           
-          {[1, 2, 3].map(item => (
-            <div key={item} className={`flex flex-col items-center gap-2 ${step >= item ? 'text-primary' : 'text-slate-400'}`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm border-2 transition-all bg-white ${step >= item ? 'border-primary text-primary' : 'border-slate-300 text-slate-400'}`}>
-                {step > item ? <CheckCircle2 className="w-5 h-5" /> : item}
-              </div>
-              <span className="text-[10px] font-bold uppercase tracking-wider hidden sm:block">
-                {item === 1 ? 'Schedule' : item === 2 ? 'Details' : 'Done'}
-              </span>
-            </div>
-          ))}
-        </div>
+          {/* Left: Info & Selection */}
+          <div className="flex-1 space-y-6 w-full">
+            <Link to={`/profile/${id}`} className="flex items-center gap-2 text-slate-400 hover:text-primary transition-all font-bold text-xs uppercase tracking-widest mb-2">
+              <ArrowLeft className="w-4 h-4" /> Back to Profile
+            </Link>
 
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-          
-          {/* Header Info */}
-          <div className="p-6 sm:p-8 border-b border-slate-100 bg-slate-50 flex items-center gap-4 sm:gap-6">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-lg overflow-hidden border border-slate-200 shrink-0">
-               <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=400" alt="Doctor" className="w-full h-full object-cover" />
+            <div className="bg-white rounded-[3rem] border border-slate-100 p-8 sm:p-10 shadow-sm">
+               <div className="flex flex-col sm:flex-row gap-8 items-center sm:items-start text-center sm:text-left">
+                  <img src={doctor.image} className="w-24 h-24 sm:w-32 sm:h-32 rounded-[2.5rem] object-cover shadow-xl border-4 border-slate-50" alt="" />
+                  <div className="space-y-4">
+                     <div>
+                        <h1 className="text-2xl sm:text-3xl font-black text-dark italic uppercase tracking-tight leading-none">{doctor.name}</h1>
+                        <p className="text-sm font-bold text-primary italic mt-2">{doctor.specialty}</p>
+                     </div>
+                     <div className="flex items-center justify-center sm:justify-start gap-4">
+                        <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-50 rounded-full border border-amber-100">
+                           <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                           <span className="text-[10px] font-black text-dark tracking-tight">{doctor.rating}</span>
+                        </div>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic">{doctor.reviews} Reviews</span>
+                     </div>
+                  </div>
+               </div>
+
+               <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="p-6 bg-slate-50 rounded-[2rem] border border-slate-100 space-y-4 relative overflow-hidden group">
+                     <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform">
+                        <Calendar className="w-12 h-12 text-dark" />
+                     </div>
+                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Doctor Availability</p>
+                     <div className="space-y-1">
+                        <p className="text-sm font-bold text-dark italic">{doctor.availability}</p>
+                        <p className="text-[10px] font-black text-primary uppercase tracking-tighter">{doctor.timing}</p>
+                     </div>
+                  </div>
+                  <div className="p-6 bg-slate-50 rounded-[2rem] border border-slate-100 space-y-4 relative overflow-hidden group">
+                     <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform">
+                        <Clock className="w-12 h-12 text-dark" />
+                     </div>
+                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Wait Time</p>
+                     <div className="space-y-1">
+                        <p className="text-sm font-bold text-dark italic">Average 15-20 Min</p>
+                        <p className="text-[10px] font-black text-emerald-500 uppercase tracking-tighter">Verified Real-time</p>
+                     </div>
+                  </div>
+               </div>
             </div>
-            <div className="flex-1">
-               <h1 className="text-xl sm:text-2xl font-bold text-dark">Dr. Saira Jabeen</h1>
-               <p className="text-xs sm:text-sm font-semibold text-primary mt-1 mb-2">Oncologist</p>
-               <div className="flex items-center gap-2 text-[10px] sm:text-xs font-bold text-slate-500">
-                  <Star className="w-3 h-3 sm:w-4 sm:h-4 text-amber-500 fill-amber-500" /> 4.9 (1,240 Reviews)
+
+            {/* Selection Area */}
+            <div className="bg-white rounded-[3rem] border border-slate-100 p-8 sm:p-10 shadow-sm space-y-10">
+               <div>
+                  <h3 className="text-sm font-black text-dark uppercase tracking-widest italic mb-6 flex items-center gap-3">
+                     <div className="w-8 h-8 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                        <Calendar className="w-4 h-4" />
+                     </div>
+                     1. Select Appointment Date
+                  </h3>
+                  <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-none snap-x">
+                     {dates.map((date, idx) => (
+                        <button
+                           key={idx}
+                           onClick={() => setSelectedDate(idx)}
+                           className={`snap-start shrink-0 w-20 py-6 rounded-[2rem] border-2 transition-all flex flex-col items-center gap-2 ${selectedDate === idx ? 'bg-dark border-dark text-white shadow-xl scale-105' : 'bg-white border-slate-100 text-slate-400 hover:border-slate-200'}`}
+                        >
+                           <span className="text-[9px] font-black uppercase italic tracking-tighter">{date.toLocaleDateString('en-US', { weekday: 'short' })}</span>
+                           <span className="text-xl font-black italic leading-none">{date.getDate()}</span>
+                           <span className="text-[9px] font-black uppercase italic tracking-tighter">{date.toLocaleDateString('en-US', { month: 'short' })}</span>
+                        </button>
+                     ))}
+                  </div>
+               </div>
+
+               <div>
+                  <h3 className="text-sm font-black text-dark uppercase tracking-widest italic mb-6 flex items-center gap-3">
+                     <div className="w-8 h-8 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                        <Clock className="w-4 h-4" />
+                     </div>
+                     2. Choose Available Time
+                  </h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                     {slots.map((slot, idx) => (
+                        <button
+                           key={idx}
+                           onClick={() => setSelectedSlot(slot)}
+                           className={`py-4 rounded-2xl border-2 transition-all text-xs font-black uppercase italic ${selectedSlot === slot ? 'bg-primary/10 border-primary text-primary shadow-inner' : 'bg-white border-slate-100 text-slate-400 hover:border-slate-200 hover:bg-slate-50'}`}
+                        >
+                           {slot}
+                        </button>
+                     ))}
+                  </div>
+               </div>
+
+               <div>
+                  <h3 className="text-sm font-black text-dark uppercase tracking-widest italic mb-6 flex items-center gap-3">
+                     <div className="w-8 h-8 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                        <Stethoscope className="w-4 h-4" />
+                     </div>
+                     3. Consultation Mode
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                     <button 
+                        onClick={() => setConsultType('Video')}
+                        className={`p-6 rounded-[2rem] border-2 text-left transition-all flex items-center gap-4 ${consultType === 'Video' ? 'border-primary bg-primary/5' : 'border-slate-100 hover:border-slate-200 bg-white'}`}
+                     >
+                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${consultType === 'Video' ? 'bg-primary text-white shadow-xl shadow-primary/20' : 'bg-slate-100 text-slate-400'}`}>
+                           <Video className="w-6 h-6" />
+                        </div>
+                        <div>
+                           <p className="text-[10px] font-black text-dark uppercase tracking-widest italic">Video Consult</p>
+                           <p className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter mt-0.5">Secure Virtual Visit</p>
+                        </div>
+                     </button>
+                     <button 
+                        onClick={() => setConsultType('In-Clinic')}
+                        className={`p-6 rounded-[2rem] border-2 text-left transition-all flex items-center gap-4 ${consultType === 'In-Clinic' ? 'border-primary bg-primary/5' : 'border-slate-100 hover:border-slate-200 bg-white'}`}
+                     >
+                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${consultType === 'In-Clinic' ? 'bg-primary text-white shadow-xl shadow-primary/20' : 'bg-slate-100 text-slate-400'}`}>
+                           <MapPin className="w-6 h-6" />
+                        </div>
+                        <div>
+                           <p className="text-[10px] font-black text-dark uppercase tracking-widest italic">In-Person</p>
+                           <p className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter mt-0.5">Clinic Appointment</p>
+                        </div>
+                     </button>
+                  </div>
                </div>
             </div>
           </div>
 
-          <div className="p-6 sm:p-8">
-            {step === 1 && (
-              <div className="animate-in fade-in slide-in-from-right-4 duration-300 space-y-8">
+          {/* Right: Summary & Action */}
+          <div className="lg:w-96 w-full shrink-0 lg:sticky lg:top-28">
+             <div className="bg-dark rounded-[3rem] p-10 text-white shadow-2xl relative overflow-hidden group">
+                <div className="absolute top-0 right-0 p-8 opacity-10 -rotate-12 group-hover:rotate-0 transition-transform">
+                   <ShieldCheck className="w-24 h-24" />
+                </div>
                 
-                {/* Consultation Selection */}
-                <div>
-                  <h3 className="text-sm font-bold text-dark mb-4">Select Consultation Type</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <button 
-                      onClick={() => setIsOnline(true)}
-                      className={`p-4 rounded-xl border-2 text-left transition-all flex items-start gap-3 ${isOnline ? 'border-primary bg-primary/5' : 'border-slate-100 hover:border-slate-300'}`}
-                    >
-                      <div className={`p-2 rounded-lg ${isOnline ? 'bg-primary text-white' : 'bg-slate-100 text-slate-500'}`}>
-                        <Video className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <p className={`text-sm font-bold ${isOnline ? 'text-primary' : 'text-dark'}`}>Video Consultation</p>
-                        <p className="text-xs font-medium text-slate-500 mt-0.5">Online via our secure platform</p>
-                        <p className={`text-sm font-bold mt-2 ${isOnline ? 'text-primary' : 'text-dark'}`}>Rs. 2,000</p>
-                      </div>
-                    </button>
-                    
-                    <button 
-                      onClick={() => setIsOnline(false)}
-                      className={`p-4 rounded-xl border-2 text-left transition-all flex items-start gap-3 ${!isOnline ? 'border-primary bg-primary/5' : 'border-slate-100 hover:border-slate-300'}`}
-                    >
-                      <div className={`p-2 rounded-lg ${!isOnline ? 'bg-primary text-white' : 'bg-slate-100 text-slate-500'}`}>
-                        <MapPin className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <p className={`text-sm font-bold ${!isOnline ? 'text-primary' : 'text-dark'}`}>In-Clinic Visit</p>
-                        <p className="text-xs font-medium text-slate-500 mt-0.5">Visit doctor at the clinic</p>
-                        <p className={`text-sm font-bold mt-2 ${!isOnline ? 'text-primary' : 'text-dark'}`}>Rs. 2,500</p>
-                      </div>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Date Selection */}
-                <div>
-                  <h3 className="text-sm font-bold text-dark mb-4 flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-primary" /> Select Date
-                  </h3>
-                  <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none snap-x">
-                    {dates.map((date, idx) => {
-                      const isSelected = selectedDate === idx;
-                      const month = date.toLocaleString('default', { month: 'short' });
-                      const day = date.getDate().toString().padStart(2, '0');
-                      const dayName = date.toLocaleString('default', { weekday: 'short' });
-                      
-                      return (
-                        <button
-                          key={idx}
-                          onClick={() => { setSelectedDate(idx); setSelectedSlot(null); }}
-                          className={`snap-start shrink-0 flex flex-col items-center justify-center w-16 h-20 rounded-xl border transition-all ${
-                            isSelected 
-                              ? 'bg-primary border-primary text-white shadow-md' 
-                              : 'bg-white border-slate-200 text-slate-600 hover:border-primary/50 hover:bg-slate-50'
-                          }`}
-                        >
-                          <span className={`text-[10px] font-bold uppercase tracking-wider mb-1 ${isSelected ? 'text-white/80' : 'text-slate-400'}`}>{dayName}</span>
-                          <span className="text-lg font-bold">{day}</span>
-                          <span className={`text-[10px] font-medium ${isSelected ? 'text-white/80' : 'text-slate-500'}`}>{month}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Time Selection */}
-                <div>
-                   <h3 className="text-sm font-bold text-dark mb-4 flex items-center gap-2">
-                     <Clock className="w-4 h-4 text-primary" /> Select Time Slot
-                   </h3>
-                   
+                <h3 className="text-xl font-black italic uppercase tracking-tight mb-8">Booking <span className="text-primary italic">Summary</span></h3>
+                
+                <div className="space-y-8 relative z-10">
                    <div className="space-y-4">
-                     {morningSlots.length > 0 && (
-                       <div>
-                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Morning</p>
-                         <div className="flex flex-wrap gap-2">
-                           {morningSlots.map((slot, i) => (
-                             <button
-                               key={`m-${i}`}
-                               onClick={() => setSelectedSlot(slot)}
-                               className={`px-4 py-2 rounded-lg border text-sm font-bold transition-all ${selectedSlot === slot ? 'bg-primary/10 border-primary text-primary' : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'}`}
-                             >
-                               {slot}
-                             </button>
-                           ))}
-                         </div>
-                       </div>
-                     )}
+                      <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-white/40 italic">
+                         <span>Date</span>
+                         <span className="text-white text-right">{dates[selectedDate].toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-white/40 italic">
+                         <span>Time Slot</span>
+                         <span className="text-white text-right">{selectedSlot || '--:--'}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-white/40 italic">
+                         <span>Consultation</span>
+                         <span className="text-white text-right">{consultType} Visit</span>
+                      </div>
+                   </div>
 
-                     {afternoonSlots.length > 0 && (
-                       <div>
-                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Afternoon</p>
-                         <div className="flex flex-wrap gap-2">
-                           {afternoonSlots.map((slot, i) => (
-                             <button
-                               key={`a-${i}`}
-                               onClick={() => setSelectedSlot(slot)}
-                               className={`px-4 py-2 rounded-lg border text-sm font-bold transition-all ${selectedSlot === slot ? 'bg-primary/10 border-primary text-primary' : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'}`}
-                             >
-                               {slot}
-                             </button>
-                           ))}
-                         </div>
-                       </div>
-                     )}
+                   <div className="h-px bg-white/10 w-full"></div>
 
-                     {eveningSlots.length > 0 && (
-                       <div>
-                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Evening</p>
-                         <div className="flex flex-wrap gap-2">
-                           {eveningSlots.map((slot, i) => (
-                             <button
-                               key={`e-${i}`}
-                               onClick={() => setSelectedSlot(slot)}
-                               className={`px-4 py-2 rounded-lg border text-sm font-bold transition-all ${selectedSlot === slot ? 'bg-primary/10 border-primary text-primary' : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'}`}
-                             >
-                               {slot}
-                             </button>
-                           ))}
-                         </div>
-                       </div>
-                     )}
+                   <div className="flex justify-between items-end">
+                      <div className="space-y-1">
+                         <p className="text-[10px] font-black text-white/40 uppercase tracking-widest italic">Total Fee</p>
+                         <p className="text-2xl font-black italic tracking-tighter leading-none">Rs. {doctor.fee}</p>
+                      </div>
+                      <p className="text-[9px] font-bold text-emerald-400 uppercase tracking-widest mb-1 italic">Direct Pay at Clinic</p>
+                   </div>
+
+                   <button 
+                      disabled={!selectedSlot || isBooking}
+                      onClick={handleConfirmBooking}
+                      className={`w-full py-5 rounded-[2.5rem] font-black text-xs uppercase italic tracking-[0.2em] transition-all flex items-center justify-center gap-3 active:scale-95 ${!selectedSlot || isBooking ? 'bg-white/10 text-white/30 cursor-not-allowed' : 'bg-primary text-white hover:bg-white hover:text-dark hover:shadow-2xl shadow-primary/40'}`}
+                   >
+                      {isBooking ? (
+                        <>Processing...</>
+                      ) : (
+                        <>Confirm & Book Now <ChevronRight className="w-4 h-4" /></>
+                      )}
+                   </button>
+
+                   <div className="flex items-center gap-3 justify-center text-white/30">
+                      <ShieldCheck className="w-4 h-4" />
+                      <p className="text-[9px] font-bold uppercase tracking-widest italic">Secured HIPAA Compliant Booking</p>
                    </div>
                 </div>
+             </div>
 
-                <div className="pt-4 border-t border-slate-100 flex justify-end">
-                  <button 
-                    disabled={!selectedSlot}
-                    onClick={handleNextStep}
-                    className={`px-8 py-3 rounded-xl font-bold text-sm transition-all ${selectedSlot ? 'bg-primary text-white shadow-md hover:bg-primary/90' : 'bg-slate-100 text-slate-400 cursor-not-allowed'}`}
-                  >
-                    Continue
-                  </button>
+             <div className="mt-6 p-6 border-2 border-dashed border-slate-200 rounded-[2rem] flex items-center gap-4 bg-white/50 backdrop-blur-sm">
+                <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-500 shrink-0">
+                   <Info className="w-6 h-6" />
                 </div>
-              </div>
-            )}
-
-            {step === 2 && (
-              <div className="animate-in fade-in slide-in-from-right-4 duration-300 space-y-6">
-                 <div>
-                   <h3 className="text-lg font-bold text-dark mb-1">Patient Details</h3>
-                   <p className="text-sm font-medium text-slate-500">Please provide the details of the patient.</p>
-                 </div>
-
-                 <div className="space-y-4">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-600 mb-2">Patient Full Name *</label>
-                      <input 
-                        type="text" 
-                        value={patientData.name}
-                        onChange={e => setPatientData({...patientData, name: e.target.value})}
-                        className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-primary/20 text-sm font-medium"
-                        placeholder="John Doe"
-                      />
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs font-bold text-slate-600 mb-2">Phone Number *</label>
-                        <input 
-                          type="tel" 
-                          value={patientData.phone}
-                          onChange={e => setPatientData({...patientData, phone: e.target.value})}
-                          className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-primary/20 text-sm font-medium"
-                          placeholder="+1 234 567 890"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-slate-600 mb-2">Age</label>
-                        <input 
-                          type="number" 
-                          value={patientData.age}
-                          onChange={e => setPatientData({...patientData, age: e.target.value})}
-                          className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-primary/20 text-sm font-medium"
-                          placeholder="e.g. 35"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-600 mb-2">Gender</label>
-                      <div className="flex gap-3">
-                        {['Male', 'Female', 'Other'].map(g => (
-                          <button 
-                            key={g}
-                            onClick={() => setPatientData({...patientData, gender: g})}
-                            className={`flex-1 py-3 rounded-lg border text-sm font-bold transition-all ${patientData.gender === g ? 'bg-primary/10 border-primary text-primary' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-white'}`}
-                          >
-                            {g}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-600 mb-2">Reason for Visit / Symptoms</label>
-                      <textarea 
-                        value={patientData.notes}
-                        onChange={e => setPatientData({...patientData, notes: e.target.value})}
-                        className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-primary/20 text-sm font-medium resize-none h-24"
-                        placeholder="Briefly describe your symptoms..."
-                      ></textarea>
-                    </div>
-                 </div>
-
-                 <div className="pt-4 border-t border-slate-100 flex justify-between">
-                  <button 
-                    onClick={() => setStep(1)}
-                    className="px-6 py-3 rounded-xl font-bold text-sm bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition-all"
-                  >
-                    Back
-                  </button>
-                  <button 
-                    disabled={!patientData.name || !patientData.phone}
-                    onClick={handleNextStep}
-                    className={`px-8 py-3 rounded-xl font-bold text-sm transition-all ${patientData.name && patientData.phone ? 'bg-primary text-white shadow-md hover:bg-primary/90' : 'bg-slate-100 text-slate-400 cursor-not-allowed'}`}
-                  >
-                    Review Booking
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {step === 3 && (
-               <div className="animate-in fade-in slide-in-from-right-4 duration-300">
-                  <div className="bg-slate-50 rounded-xl border border-slate-200 p-6 space-y-8">
-                     
-                     <div className="flex items-center gap-3 border-b border-slate-200 pb-4">
-                        <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
-                          <CheckCircle2 className="w-5 h-5" />
-                        </div>
-                        <div>
-                          <h3 className="text-base font-bold text-dark">Appointment Summary</h3>
-                          <p className="text-xs font-medium text-slate-500">Last step before confirmation</p>
-                        </div>
-                     </div>
-
-                     <div className="grid grid-cols-2 gap-4">
-                        <div>
-                           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Date & Time</p>
-                           <p className="text-sm font-bold text-dark">{dates[selectedDate].toDateString()}</p>
-                           <p className="text-sm font-semibold text-primary">{selectedSlot}</p>
-                        </div>
-                        <div>
-                           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Consultation Type</p>
-                           <div className="flex items-center gap-2 mt-1">
-                              {isOnline ? <Video className="w-4 h-4 text-primary" /> : <MapPin className="w-4 h-4 text-emerald-500" />}
-                              <p className="text-sm font-bold text-dark">{isOnline ? 'Online Video' : 'In-Clinic'}</p>
-                           </div>
-                        </div>
-                     </div>
-
-                     {/* Payment Selection */}
-                     <div className="space-y-4">
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Select Payment Method</p>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                           <button 
-                             onClick={() => setPaymentMethod('online')}
-                             className={`p-4 rounded-xl border-2 transition-all text-left flex items-center gap-3 ${paymentMethod === 'online' ? 'border-primary bg-primary/5 shadow-sm' : 'border-slate-100 hover:border-slate-200 bg-white'}`}
-                           >
-                              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${paymentMethod === 'online' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-slate-100 text-slate-400'}`}>
-                                 <ShieldCheck className="w-4 h-4" />
-                              </div>
-                              <div>
-                                 <p className={`text-[10px] font-black uppercase italic ${paymentMethod === 'online' ? 'text-primary' : 'text-dark'}`}>Secure Online</p>
-                                 <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Pay Now (10% Off)</p>
-                              </div>
-                           </button>
-
-                           <button 
-                             onClick={() => setPaymentMethod('clinic')}
-                             className={`p-4 rounded-xl border-2 transition-all text-left flex items-center gap-3 ${paymentMethod === 'clinic' ? 'border-primary bg-primary/5 shadow-sm' : 'border-slate-100 hover:border-slate-200 bg-white'}`}
-                           >
-                              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${paymentMethod === 'clinic' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-slate-100 text-slate-400'}`}>
-                                 <Clock className="w-4 h-4" />
-                              </div>
-                              <div>
-                                 <p className={`text-[10px] font-black uppercase italic ${paymentMethod === 'clinic' ? 'text-primary' : 'text-dark'}`}>Pay at Clinic</p>
-                                 <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Pay during visit</p>
-                              </div>
-                           </button>
-                        </div>
-                     </div>
-
-                     <div className="flex justify-between items-center border-t border-slate-200 pt-4">
-                        <span className="text-sm font-bold text-slate-600 italic">Total Consultation Fee</span>
-                        <span className="text-xl font-black text-primary italic">Rs. {isOnline ? '2,000' : '2,500'}</span>
-                     </div>
-                  </div>
-
-                  <div className="flex justify-between pt-8">
-                    <button 
-                      onClick={() => setStep(2)}
-                      className="px-6 py-3 rounded-xl font-bold text-sm bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-2"
-                    >
-                      <ArrowLeft className="w-4 h-4" /> Edit Details
-                    </button>
-                    <button 
-                      onClick={() => navigate('/orders')}
-                      className="px-10 py-3 rounded-xl font-black text-xs uppercase italic tracking-widest bg-dark text-white shadow-xl shadow-dark/20 hover:scale-105 transition-all flex items-center gap-3"
-                    >
-                      <ShieldCheck className="w-4 h-4" /> Confirm & Pay
-                    </button>
-                  </div>
-               </div>
-            )}
-            
+                <p className="text-[9px] font-bold text-slate-400 uppercase leading-relaxed italic">
+                   Note: Appointment is directly placed. No online payment required. Pay at the clinic during your visit.
+                </p>
+             </div>
           </div>
+
         </div>
       </div>
 

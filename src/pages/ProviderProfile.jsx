@@ -24,11 +24,6 @@ const ProviderProfile = () => {
   const navigate = useNavigate();
   const { providers, isFavorite, toggleFavorite } = useAuth();
   
-  const [selectedDate, setSelectedDate] = useState(0);
-  const [selectedSlot, setSelectedSlot] = useState(null);
-  const [consultationType, setConsultationType] = useState('video');
-  const [showConfirmation, setShowConfirmation] = useState(false);
-
   const registeredDoctor = providers.find(p => p.id === parseInt(id) || p.id === id);
 
   const doctorsData = {
@@ -188,151 +183,49 @@ const ProviderProfile = () => {
 
           </div>
 
-          {/* Right Column: Booking Widget */}
-          <div className="lg:w-96 shrink-0" id="booking-widget">
-            <div className="bg-white rounded-xl border border-slate-200 shadow-lg lg:sticky lg:top-24">
-              
-              {/* Widget Header */}
-              <div className="p-6 border-b border-slate-100 text-center bg-slate-50 rounded-t-xl">
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Consultation Fee</p>
-                <h2 className="text-3xl font-bold text-primary">Rs. {doctor.fee}</h2>
-              </div>
-
-              {/* Booking Body */}
-              <div className="p-6">
-                
-                {/* Consultation Type */}
-                <div className="mb-6">
-                  <div className="flex gap-2">
-                    <button 
-                      onClick={() => setConsultationType('video')}
-                      className={`flex-1 py-3 px-2 rounded-lg border flex flex-col items-center gap-2 transition-all ${consultationType === 'video' ? 'bg-primary/5 border-primary text-primary' : 'border-slate-200 text-slate-500 hover:border-slate-300'}`}
-                    >
-                      <Video className="w-5 h-5" />
-                      <span className="text-xs font-bold">Video Consult</span>
-                    </button>
-                    <button 
-                      onClick={() => setConsultationType('clinic')}
-                      className={`flex-1 py-3 px-2 rounded-lg border flex flex-col items-center gap-2 transition-all ${consultationType === 'clinic' ? 'bg-primary/5 border-primary text-primary' : 'border-slate-200 text-slate-500 hover:border-slate-300'}`}
-                    >
-                      <Building className="w-5 h-5" />
-                      <span className="text-xs font-bold">In-Clinic</span>
-                    </button>
+          {/* Right Column: CTA */}
+          <div className="lg:w-96 shrink-0">
+            <div className="bg-dark rounded-[3.5rem] p-10 text-white shadow-2xl relative overflow-hidden group lg:sticky lg:top-28">
+               <div className="absolute top-0 right-0 p-8 opacity-10 -rotate-12 group-hover:rotate-0 transition-all duration-700">
+                  <Calendar className="w-32 h-32" />
+               </div>
+               <div className="relative z-10 space-y-8">
+                  <div className="space-y-1">
+                     <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] italic">Consultation starts at</p>
+                     <p className="text-4xl font-black italic tracking-tighter">Rs. {doctor.fee}</p>
                   </div>
-                </div>
-
-                {/* Day Selection */}
-                <div className="mb-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-sm font-bold text-dark flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-primary" /> Select Day
-                    </h3>
+                  
+                  <div className="space-y-4">
+                     <h3 className="text-xl font-black italic uppercase tracking-tight leading-none">Instant <span className="text-primary italic">Booking</span></h3>
+                     <p className="text-[10px] font-bold text-white/50 uppercase tracking-widest leading-relaxed italic">Directly schedule your visit via our simplified one-click system. No payment required.</p>
                   </div>
-                  <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
-                    {availability.map((day, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => { setSelectedDate(idx); setSelectedSlot(null); }}
-                        className={`flex-1 shrink-0 py-2.5 px-3 rounded-lg border text-center transition-all ${selectedDate === idx ? 'bg-dark text-white border-dark transform scale-105' : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'}`}
-                      >
-                        <p className="text-xs font-semibold">{day.day}</p>
-                        <p className={`text-[10px] font-bold ${selectedDate === idx ? 'text-white/80' : 'text-slate-400'}`}>{day.date}</p>
-                      </button>
-                    ))}
+
+                  <Link 
+                    to={`/book/${id}`}
+                    className="w-full py-5 bg-primary text-white rounded-[2.5rem] flex items-center justify-center gap-3 font-black text-xs uppercase italic tracking-[0.2em] shadow-xl shadow-primary/20 hover:bg-white hover:text-dark transition-all active:scale-95"
+                  >
+                     Book Appointment <ArrowRight className="w-4 h-4" />
+                  </Link>
+
+                  <div className="flex items-center gap-3 text-white/30 justify-center">
+                     <ShieldCheck className="w-4 h-4" />
+                     <p className="text-[9px] font-black uppercase tracking-widest italic">PMC Verified Profile</p>
                   </div>
-                </div>
-
-                {/* Slot Selection */}
-                <div className="mb-8">
-                  <h3 className="text-sm font-bold text-dark flex items-center gap-2 mb-3">
-                    <Clock className="w-4 h-4 text-primary" /> Select Time
-                  </h3>
-                  {availability[selectedDate].slots.length > 0 ? (
-                    <div className="grid grid-cols-3 gap-2">
-                      {availability[selectedDate].slots.map((slot, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => setSelectedSlot(slot)}
-                          className={`py-2 rounded-lg border text-xs font-bold transition-all ${selectedSlot === slot ? 'bg-primary/10 border-primary text-primary' : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50'}`}
-                        >
-                          {slot}
-                        </button>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-sm font-semibold text-slate-500 text-center py-4">No slots available for this day.</p>
-                  )}
-                </div>
-
-                {/* Action */}
-                <button
-                  disabled={!selectedSlot}
-                  onClick={handleBooking}
-                  className={`w-full py-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${selectedSlot ? 'bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/20' : 'bg-slate-100 text-slate-400 cursor-not-allowed'}`}
-                >
-                  Book Appointment <ArrowRight className="w-4 h-4" />
-                </button>
-                <p className="text-center text-[10px] font-semibold text-slate-400 mt-3">Book now, pay later at clinic (Cash/Card)</p>
-
-              </div>
+               </div>
             </div>
           </div>
 
         </div>
       </div>
 
-      {showConfirmation && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl relative animate-in fade-in zoom-in duration-200">
-            <div className="p-6 text-center">
-              <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CheckCircle2 className="w-8 h-8 text-emerald-500" />
-              </div>
-              <h2 className="text-xl font-bold text-dark mb-2">Booking Confirmed!</h2>
-              <p className="text-sm font-medium text-slate-500 mb-6">Your appointment with {doctor.name} has been placed.</p>
-              
-              <div className="bg-slate-50 p-4 rounded-xl text-left border border-slate-100 mb-6 space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-xs font-medium text-slate-500">Date & Time</span>
-                  <span className="text-xs font-bold text-dark">{availability[selectedDate].date}, {selectedSlot}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-xs font-medium text-slate-500">Type</span>
-                  <span className="text-xs font-bold text-dark capitalize">{consultationType} Installment</span>
-                </div>
-                <div className="flex justify-between border-t border-slate-200 mt-2 pt-2">
-                  <span className="text-xs font-bold text-slate-500">Total Fee</span>
-                  <span className="text-sm font-bold text-primary">Rs. {doctor.fee}</span>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <button 
-                  onClick={() => navigate('/orders')}
-                  className="w-full py-3 bg-dark text-white rounded-xl text-sm font-bold hover:bg-slate-800 transition-colors"
-                >
-                  View My Orders
-                </button>
-                <button 
-                  onClick={() => setShowConfirmation(false)}
-                  className="w-full py-3 bg-white text-slate-600 border border-slate-200 rounded-xl text-sm font-bold hover:bg-slate-50 transition-colors"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Floating Action Button for Mobile replaced regular bottom nav */}
       <div className="lg:hidden fixed bottom-6 right-6 z-[100]">
-        <button 
-          onClick={() => document.getElementById('booking-widget')?.scrollIntoView({ behavior: 'smooth' })}
+        <Link 
+          to={`/book/${id}`}
           className="w-14 h-14 bg-primary text-white rounded-full shadow-2xl shadow-primary/40 flex items-center justify-center"
         >
           <Calendar className="w-6 h-6" />
-        </button>
+        </Link>
       </div>
 
       <Footer />
