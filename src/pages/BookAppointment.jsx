@@ -43,15 +43,41 @@ const BookAppointment = () => {
     timing: "09:00 AM - 05:00 PM"
   };
 
-  const dates = [];
+  // Oladoc-style structured locations
+  const availableLocations = [
+    { 
+      name: "City Central Hospital", 
+      address: "123 Main St, Medical District", 
+      fee: "2,000", 
+      slots: ['09:00 AM', '10:30 AM', '11:15 AM', '02:00 PM'] 
+    },
+    { 
+      name: "Wellness Care Clinic", 
+      address: "456 Oak Blvd, Health City", 
+      fee: "1,500", 
+      slots: ['03:45 PM', '05:00 PM', '06:30 PM'] 
+    },
+    { 
+      name: "Medicare Facility", 
+      address: "789 Pine Ave, Downtown", 
+      fee: "2,500", 
+      slots: ['10:00 AM', '01:30 PM', '04:00 PM'] 
+    }
+  ];
+
+  const scheduleDays = [];
   const today = new Date();
   for (let i = 0; i < 7; i++) {
     const d = new Date(today);
     d.setDate(today.getDate() + i);
-    dates.push(d);
+    scheduleDays.push({
+      dateObj: d,
+      location: availableLocations[i % availableLocations.length]
+    });
   }
 
-  const slots = ['09:00 AM', '10:30 AM', '11:15 AM', '02:00 PM', '03:45 PM', '05:00 PM'];
+  const selectedDayInfo = scheduleDays[selectedDate];
+  const currentLocation = selectedDayInfo.location;
 
   const handleConfirmBooking = () => {
     if (!selectedSlot) return;
@@ -61,8 +87,10 @@ const BookAppointment = () => {
     const newAppt = {
       doctor: doctor.name,
       specialty: doctor.specialty,
-      date: dates[selectedDate].toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+      date: selectedDayInfo.dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
       time: selectedSlot,
+      location: currentLocation.name,
+      address: currentLocation.address,
       type: consultType,
       image: doctor.image
     };
@@ -175,29 +203,47 @@ const BookAppointment = () => {
                      1. Select Appointment Date
                   </h3>
                   <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-none snap-x">
-                     {dates.map((date, idx) => (
-                        <button
-                           key={idx}
-                           onClick={() => setSelectedDate(idx)}
-                           className={`snap-start shrink-0 w-20 py-6 rounded-[2rem] border-2 transition-all flex flex-col items-center gap-2 ${selectedDate === idx ? 'bg-dark border-dark text-white shadow-xl scale-105' : 'bg-white border-slate-100 text-slate-400 hover:border-slate-200'}`}
-                        >
-                           <span className="text-[9px] font-black uppercase italic tracking-tighter">{date.toLocaleDateString('en-US', { weekday: 'short' })}</span>
-                           <span className="text-xl font-black italic leading-none">{date.getDate()}</span>
-                           <span className="text-[9px] font-black uppercase italic tracking-tighter">{date.toLocaleDateString('en-US', { month: 'short' })}</span>
-                        </button>
-                     ))}
+                     {scheduleDays.map((day, idx) => {
+                        const date = day.dateObj;
+                        return (
+                          <button
+                             key={idx}
+                             onClick={() => {
+                               setSelectedDate(idx);
+                               setSelectedSlot(null); // Reset slot when date changes
+                             }}
+                             className={`snap-start shrink-0 w-20 py-6 rounded-[2rem] border-2 transition-all flex flex-col items-center gap-2 ${selectedDate === idx ? 'bg-dark border-dark text-white shadow-xl scale-105' : 'bg-white border-slate-100 text-slate-400 hover:border-slate-200'}`}
+                          >
+                             <span className="text-[9px] font-black uppercase italic tracking-tighter">{date.toLocaleDateString('en-US', { weekday: 'short' })}</span>
+                             <span className="text-xl font-black italic leading-none">{date.getDate()}</span>
+                             <span className="text-[9px] font-black uppercase italic tracking-tighter">{date.toLocaleDateString('en-US', { month: 'short' })}</span>
+                          </button>
+                        );
+                     })}
                   </div>
                </div>
 
                <div>
                   <h3 className="text-sm font-black text-dark uppercase tracking-widest italic mb-6 flex items-center gap-3">
                      <div className="w-8 h-8 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
-                        <Clock className="w-4 h-4" />
+                        <MapPin className="w-4 h-4" />
                      </div>
-                     2. Choose Available Time
+                     2. Location & Time
                   </h3>
+                  
+                  <div className="mb-6 p-4 rounded-[2rem] border border-primary/20 bg-primary/5 flex items-start gap-4">
+                     <div className="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center shrink-0">
+                       <Stethoscope className="w-5 h-5" />
+                     </div>
+                     <div>
+                       <p className="font-black text-dark uppercase tracking-tighter italic text-sm">{currentLocation.name}</p>
+                       <p className="text-xs font-bold text-slate-500">{currentLocation.address}</p>
+                       <p className="text-[10px] font-black text-primary uppercase tracking-widest mt-1">Fee: Rs. {currentLocation.fee}</p>
+                     </div>
+                  </div>
+
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                     {slots.map((slot, idx) => (
+                     {currentLocation.slots.map((slot, idx) => (
                         <button
                            key={idx}
                            onClick={() => setSelectedSlot(slot)}
@@ -259,7 +305,11 @@ const BookAppointment = () => {
                    <div className="space-y-4">
                       <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-white/40 italic">
                          <span>Date</span>
-                         <span className="text-white text-right">{dates[selectedDate].toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
+                         <span className="text-white text-right">{selectedDayInfo.dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
+                      </div>
+                      <div className="flex justify-between items-start text-[10px] font-black uppercase tracking-widest text-white/40 italic">
+                         <span>Location</span>
+                         <span className="text-white text-right max-w-[150px] leading-tight">{currentLocation.name}</span>
                       </div>
                       <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-white/40 italic">
                          <span>Time Slot</span>
@@ -276,7 +326,7 @@ const BookAppointment = () => {
                    <div className="flex justify-between items-end">
                       <div className="space-y-1">
                          <p className="text-[10px] font-black text-white/40 uppercase tracking-widest italic">Total Fee</p>
-                         <p className="text-2xl font-black italic tracking-tighter leading-none">Rs. {doctor.fee}</p>
+                         <p className="text-2xl font-black italic tracking-tighter leading-none">Rs. {currentLocation.fee}</p>
                       </div>
                       <p className="text-[9px] font-bold text-emerald-400 uppercase tracking-widest mb-1 italic">Direct Pay at Clinic</p>
                    </div>
