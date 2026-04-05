@@ -14,51 +14,23 @@ import {
   ArrowLeft
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useDashboard } from '../../context/DashboardContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Trash2 } from 'lucide-react';
 
 const Messages = () => {
   const { user } = useAuth();
-  const [selectedChat, setSelectedChat] = useState(null);
+  const { chats, sendMessage, deleteMessage, deleteChat } = useDashboard();
+  const [selectedChatId, setSelectedChatId] = useState(null);
   const [message, setMessage] = useState('');
 
-  const contacts = [
-    { 
-      id: 1, 
-      name: 'Dr. Adam Cooper', 
-      role: 'Oncologist', 
-      avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=200',
-      lastMsg: 'Your lab results look promising. Let\'s discuss in our next visit.',
-      time: '10:45 AM',
-      unread: 2,
-      online: true
-    },
-    { 
-      id: 2, 
-      name: 'City Central Pharmacy', 
-      role: 'Pharmacy', 
-      avatar: 'https://images.unsplash.com/photo-1576602976047-174e57a47881?q=80&w=200',
-      lastMsg: 'The Panadol Extra you ordered is ready for pickup.',
-      time: 'Yesterday',
-      unread: 0,
-      online: false
-    },
-    { 
-      id: 3, 
-      name: 'Dr. Sarah Johnson', 
-      role: 'Cardiologist', 
-      avatar: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=200',
-      lastMsg: 'Please continue the current medication.',
-      time: 'Mon',
-      unread: 0,
-      online: true
-    }
-  ];
+  const selectedChat = chats.find(c => c.id === selectedChatId);
 
-  const currentMessages = [
-    { id: 1, text: 'Hello Doctor, I wanted to follow up on my last report.', sent: true, time: '10:30 AM' },
-    { id: 2, text: 'Hello! I have reviewed them.', sent: false, time: '10:35 AM' },
-    { id: 3, text: 'Your lab results look promising. Let\'s discuss in our next visit.', sent: false, time: '10:45 AM' },
-  ];
+  const handleSend = () => {
+    if (!message.trim() || !selectedChatId) return;
+    sendMessage(selectedChatId, message);
+    setMessage('');
+  };
 
   return (
     <div className="h-[calc(100vh-140px)] flex bg-white rounded-[3.5rem] border border-slate-100 shadow-xl overflow-hidden animate-in slide-in-from-bottom-8 duration-700">
@@ -83,32 +55,34 @@ const Messages = () => {
         </div>
 
         <div className="flex-1 overflow-y-auto px-4 space-y-1 scrollbar-none pb-8">
-          {contacts.map((contact) => (
-            <button
-              key={contact.id}
-              onClick={() => setSelectedChat(contact)}
-              className={`w-full flex items-center gap-4 p-5 rounded-[2.5rem] transition-all relative group
-                ${selectedChat?.id === contact.id ? 'bg-primary text-white shadow-2xl shadow-primary/20 scale-[1.02] z-10' : 'hover:bg-slate-50'}`}
-            >
-              <div className="relative shrink-0">
-                <img src={contact.avatar} className="w-14 h-14 rounded-2xl object-cover border-2 border-white shadow-md" alt="" />
-                {contact.online && (
-                  <span className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full"></span>
-                )}
-              </div>
-              <div className="flex-1 min-w-0 text-left">
-                <div className="flex justify-between items-center mb-1">
-                  <h4 className={`text-sm font-black italic uppercase leading-none truncate ${selectedChat?.id === contact.id ? 'text-white' : 'text-dark'}`}>{contact.name}</h4>
-                  <span className={`text-[9px] font-bold uppercase ${selectedChat?.id === contact.id ? 'text-white/60' : 'text-slate-400'}`}>{contact.time}</span>
+          {chats.map((contact) => (
+            <div key={contact.id} className="relative group/item">
+              <button
+                onClick={() => setSelectedChatId(contact.id)}
+                className={`w-full flex items-center gap-4 p-5 rounded-[2.5rem] transition-all relative group
+                  ${selectedChat?.id === contact.id ? 'bg-primary text-white shadow-2xl shadow-primary/20 scale-[1.02] z-10' : 'hover:bg-slate-50'}`}
+              >
+                <div className="relative shrink-0">
+                  <img src={contact.avatar} className="w-14 h-14 rounded-2xl object-cover border-2 border-white shadow-md" alt="" />
+                  {contact.online && (
+                    <span className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full"></span>
+                  )}
                 </div>
-                <p className={`text-[11px] font-bold italic truncate ${selectedChat?.id === contact.id ? 'text-white/80' : 'text-slate-500'}`}>{contact.lastMsg}</p>
-              </div>
-              {contact.unread > 0 && selectedChat?.id !== contact.id && (
-                <span className="shrink-0 w-5 h-5 bg-primary text-white text-[9px] font-black rounded-full flex items-center justify-center shadow-lg animate-bounce">
-                  {contact.unread}
-                </span>
-              )}
-            </button>
+                <div className="flex-1 min-w-0 text-left">
+                  <div className="flex justify-between items-center mb-1">
+                    <h4 className={`text-sm font-black italic uppercase leading-none truncate ${selectedChat?.id === contact.id ? 'text-white' : 'text-dark'}`}>{contact.name}</h4>
+                    <span className={`text-[9px] font-bold uppercase ${selectedChat?.id === contact.id ? 'text-white/60' : 'text-slate-400'}`}>{contact.time}</span>
+                  </div>
+                  <p className={`text-[11px] font-bold italic truncate ${selectedChat?.id === contact.id ? 'text-white/80' : 'text-slate-500'}`}>{contact.lastMsg}</p>
+                </div>
+              </button>
+              <button 
+                onClick={(e) => { e.stopPropagation(); deleteChat(contact.id); if (selectedChatId === contact.id) setSelectedChatId(null); }}
+                className="absolute right-6 top-1/2 -translate-y-1/2 p-3 bg-rose-50 text-rose-500 rounded-xl opacity-0 group-hover/item:opacity-100 transition-all shadow-sm translate-x-4 group-hover/item:translate-x-0"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
           ))}
         </div>
       </div>
@@ -120,7 +94,7 @@ const Messages = () => {
             {/* Chat Header */}
             <div className="px-8 py-6 bg-white border-b border-slate-50 flex items-center justify-between z-10 shadow-sm">
               <div className="flex items-center gap-4">
-                <button onClick={() => setSelectedChat(null)} className="lg:hidden p-2 -ml-2 text-slate-400 hover:text-dark">
+                <button onClick={() => setSelectedChatId(null)} className="lg:hidden p-2 -ml-2 text-slate-400 hover:text-dark">
                   <ArrowLeft className="w-6 h-6" />
                 </button>
                 <div className="relative">
@@ -136,28 +110,31 @@ const Messages = () => {
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                 <button className="p-3 bg-slate-50 rounded-2xl text-slate-400 hover:text-primary transition-all">
-                    <Phone className="w-5 h-5" />
+                 <button onClick={() => deleteChat(selectedChat.id)} className="p-3 bg-rose-50 rounded-2xl text-rose-500 hover:bg-rose-500 hover:text-white transition-all group/hdr pl-4 pr-4">
+                    <Trash2 className="w-5 h-5" />
                  </button>
                  <button className="p-3 bg-slate-50 rounded-2xl text-slate-400 hover:text-primary transition-all">
                     <Video className="w-5 h-5" />
-                 </button>
-                 <button className="p-3 bg-slate-50 rounded-2xl text-slate-400 hover:text-dark transition-all">
-                    <MoreVertical className="w-5 h-5" />
                  </button>
               </div>
             </div>
 
             {/* Messages List Area */}
             <div className="flex-1 overflow-y-auto p-10 space-y-8 scrollbar-none bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-fixed opacity-90">
-               {currentMessages.map((msg) => (
+               {selectedChat.messages.map((msg) => (
                  <motion.div 
                    initial={{ scale: 0.9, opacity: 0, y: 10 }}
                    animate={{ scale: 1, opacity: 1, y: 0 }}
                    key={msg.id} 
-                   className={`flex ${msg.sent ? 'justify-end' : 'justify-start'}`}
+                   className={`flex group/msg ${msg.sent ? 'justify-end' : 'justify-start'}`}
                  >
-                    <div className={`max-w-[70%] lg:max-w-md ${msg.sent ? 'order-1' : 'order-2'}`}>
+                    <div className={`max-w-[70%] lg:max-w-md relative ${msg.sent ? 'order-1' : 'order-2'}`}>
+                       <button 
+                         onClick={() => deleteMessage(selectedChat.id, msg.id)}
+                         className={`absolute -top-2 ${msg.sent ? '-left-8' : '-right-8'} p-2 bg-white rounded-full shadow-lg opacity-0 group-hover/msg:opacity-100 transition-opacity hover:text-rose-500`}
+                       >
+                         <Trash2 className="w-3.5 h-3.5" />
+                       </button>
                        <div className={`p-6 rounded-3xl relative shadow-xl ${msg.sent ? 'bg-primary text-white rounded-tr-none' : 'bg-white text-dark rounded-tl-none border border-slate-100'}`}>
                           <p className="text-sm font-bold italic leading-relaxed">{msg.text}</p>
                        </div>
@@ -172,27 +149,25 @@ const Messages = () => {
 
             {/* Chat Input */}
             <div className="p-8 bg-white border-t border-slate-50 z-10">
-               <div className="flex items-center gap-4 bg-slate-50 border border-slate-100 rounded-[2.5rem] p-2 pl-6 focus-within:ring-4 focus-within:ring-primary/10 hover:bg-white transition-all shadow-inner">
-                  <button className="text-slate-400 hover:text-primary transition-all p-2">
-                     <ImageIcon className="w-5 h-5" />
-                  </button>
-                  <button className="text-slate-400 hover:text-primary transition-all p-2">
-                     <Paperclip className="w-5 h-5" />
-                  </button>
-                  <input 
-                    type="text" 
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Type your message securely..." 
-                    className="flex-1 bg-transparent border-none focus:ring-0 text-sm font-bold italic text-dark py-4 placeholder:text-slate-300"
-                  />
-                  <button className="text-slate-300 hover:text-amber-500 transition-all p-2">
-                     <Smile className="w-5 h-5" />
-                  </button>
-                  <button className="bg-dark text-white p-4 rounded-[2rem] hover:bg-primary transition-all shadow-xl hover:scale-105 active:scale-95 group">
-                     <Send className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-                  </button>
-               </div>
+                <div className="flex items-center gap-4 bg-white border border-slate-100 rounded-[2.5rem] p-2 pl-6 focus-within:ring-4 focus-within:ring-primary/10 transition-all shadow-xl">
+                   <button className="text-slate-400 hover:text-primary transition-all p-2">
+                      <ImageIcon className="w-5 h-5" />
+                   </button>
+                   <button className="text-slate-400 hover:text-primary transition-all p-2">
+                      <Paperclip className="w-5 h-5" />
+                   </button>
+                   <input 
+                     type="text" 
+                     value={message}
+                     onChange={(e) => setMessage(e.target.value)}
+                     onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                     placeholder="Type your message securely..." 
+                     className="flex-1 bg-transparent border-none focus:ring-0 text-sm font-bold italic text-dark py-4 placeholder:text-slate-300"
+                   />
+                   <button onClick={handleSend} className="bg-dark text-white p-4 rounded-[2rem] hover:bg-primary transition-all shadow-xl hover:scale-105 active:scale-95 group">
+                      <Send className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                   </button>
+                </div>
             </div>
           </>
         ) : (

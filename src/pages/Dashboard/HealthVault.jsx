@@ -43,6 +43,10 @@ const HealthVault = () => {
   };
 
   const handleForwardComplete = (store) => {
+    // 1. Find or create a chat with this store
+    // 2. Send the prescription as a message
+    sendMessage(2, `[FORWARDED RECORD]: ${selectedRecord?.name}. Please verify and fulfill.`); 
+    
     addNotification({
       title: 'Manual Order Initiated',
       message: `${selectedRecord?.name} successfully forwarded to ${store.name}. Store will verify and contact you soon.`,
@@ -130,17 +134,17 @@ const HealthVault = () => {
         animate={{ y: 0, opacity: 1 }}
         className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6"
       >
-         <div className="space-y-2">
-            <h1 className="text-3xl lg:text-4xl font-black text-dark tracking-tight italic uppercase leading-none">Health <span className="text-primary italic">Vault</span></h1>
-            <p className="text-slate-400 font-bold italic text-sm">Securely store and manage your digital health records.</p>
+         <div className="space-y-1">
+            <h1 className="text-2xl lg:text-3xl font-black text-dark tracking-tight italic uppercase leading-none">Health <span className="text-primary italic">Vault</span></h1>
+            <p className="text-slate-400 font-bold italic text-[11px] uppercase tracking-wider">Secured Clinical Record Storage.</p>
          </div>
          <motion.button 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setShowUpload(true)}
-            className="flex items-center gap-3 px-8 py-4 bg-primary text-white rounded-2xl text-[10px] font-black uppercase italic tracking-widest shadow-xl shadow-primary/20 hover:scale-105 transition-all outline-none"
+            className="flex items-center gap-3 px-10 py-3.5 bg-dark text-white rounded-2xl text-[9px] font-black uppercase italic tracking-widest shadow-xl shadow-dark/20 hover:bg-primary transition-all outline-none whitespace-nowrap"
          >
-            <Plus className="w-4 h-4" /> Upload Record
+            <Plus className="w-4 h-4" /> Upload New Record
          </motion.button>
       </motion.div>
 
@@ -226,18 +230,26 @@ const HealthVault = () => {
                     </div>
                  </div>
 
-                  <div className="mt-10 flex gap-3">
+                  <div className="mt-8 flex flex-col gap-3">
+                    <div className="flex gap-3">
+                      <button 
+                        onClick={() => handleView(record)}
+                        className="flex-1 px-4 py-3.5 bg-dark text-white rounded-2xl text-[9px] font-black uppercase italic tracking-widest hover:bg-primary transition-all flex items-center justify-center gap-3 overflow-hidden group/btn shadow-xl shadow-dark/10 hover:shadow-primary/20"
+                      >
+                         <Eye className="w-4 h-4" /> View
+                      </button>
+                      <button 
+                        onClick={() => handleDownload(record)}
+                        className="flex-1 px-4 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-[9px] font-black uppercase italic tracking-widest text-dark hover:bg-slate-100 transition-all flex items-center justify-center gap-3"
+                      >
+                         <Download className="w-4 h-4" /> Download
+                      </button>
+                    </div>
                     <button 
-                      onClick={() => handleView(record)}
-                      className="flex-1 py-4 bg-dark text-white rounded-2xl text-[9px] font-black uppercase italic tracking-widest hover:bg-primary transition-all flex items-center justify-center gap-3 overflow-hidden group/btn shadow-xl shadow-dark/10 hover:shadow-primary/20"
+                      onClick={() => handleForwardSelect(record)}
+                      className="w-full px-6 py-4 bg-primary text-white rounded-2xl text-[9px] font-black uppercase italic tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all flex items-center justify-center gap-3"
                     >
-                       <Eye className="w-4 h-4" /> View <ArrowRight className="w-3 h-3 group-hover/btn:translate-x-1 transition-transform" />
-                    </button>
-                    <button 
-                      onClick={() => handleDownload(record)}
-                      className="flex-1 py-4 bg-primary/5 border border-primary/10 rounded-2xl text-[9px] font-black uppercase italic tracking-widest text-primary hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-3"
-                    >
-                       <Download className="w-4 h-4" /> Download
+                       <Send className="w-4 h-4" /> Forward to Pharmacy/Provider
                     </button>
                   </div>
               </motion.div>

@@ -14,7 +14,9 @@ import {
   Eye,
   EyeOff,
   ChevronRight,
-  Plus
+  Plus,
+  Trash2,
+  Camera
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -33,6 +35,40 @@ const Settings = () => {
   });
   const [showPwd, setShowPwd] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        addNotification({
+          title: 'File Too Large',
+          message: 'Please select an image smaller than 2MB.',
+          type: 'warning'
+        });
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        updateProfile({ avatar: reader.result });
+        addNotification({
+          title: 'Avatar Updated',
+          message: 'Your profile picture has been changed.',
+          type: 'success'
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleDeleteAvatar = () => {
+    updateProfile({ avatar: null });
+    addNotification({
+      title: 'Avatar Removed',
+      message: 'Your profile picture has been reset to default.',
+      type: 'info'
+    });
+  };
 
   const handleSave = () => {
     setIsSaving(true);
@@ -191,14 +227,28 @@ const Settings = () => {
         return (
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-12">
              {/* Profile Header */}
-             <div className="flex items-center gap-8 border-b border-slate-50 pb-12">
-                <div className="w-32 h-32 rounded-[3.5rem] border-8 border-slate-50 relative group cursor-pointer shadow-2xl">
-                   <img src={user?.avatar || 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=200'} className="w-full h-full object-cover rounded-[2.8rem] transition-transform group-hover:scale-105" alt="" />
-                   <div className="absolute inset-0 bg-dark/40 rounded-[2.8rem] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[10px] font-black uppercase italic tracking-widest">Change</div>
+             <div className="flex flex-col sm:flex-row items-center gap-8 border-b border-slate-50 pb-12">
+                <div className="relative group">
+                  <div className="w-32 h-32 rounded-[3.5rem] border-8 border-slate-50 relative overflow-hidden shadow-2xl">
+                    <img src={user?.avatar || 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=200'} className="w-full h-full object-cover transition-transform group-hover:scale-110" alt="" />
+                    <label className="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white cursor-pointer group/label">
+                        <Camera className="w-6 h-6 mb-1 group-hover/label:scale-110 transition-transform" />
+                        <span className="text-[8px] font-black uppercase tracking-widest italic">Upload New</span>
+                        <input type="file" className="hidden" accept="image/*" onChange={handleAvatarChange} />
+                    </label>
+                  </div>
+                  {user?.avatar && (
+                    <button 
+                      onClick={handleDeleteAvatar}
+                      className="absolute -top-2 -right-2 p-2 bg-white text-rose-500 rounded-full shadow-lg border border-rose-50 hover:bg-rose-500 hover:text-white transition-all scale-0 group-hover:scale-100"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
                 </div>
-                <div>
+                <div className="text-center sm:text-left">
                    <h2 className="text-2xl font-black text-dark italic uppercase leading-tight tracking-tight">{user?.name || 'Patient User'}</h2>
-                   <p className="text-[10px] font-black text-primary uppercase tracking-widest mt-1">Free Tier Member</p>
+                   <p className="text-[10px] font-black text-primary uppercase tracking-widest mt-1 italic">Free Tier Member • Since 2024</p>
                 </div>
              </div>
 

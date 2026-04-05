@@ -63,6 +63,45 @@ export const DashboardProvider = ({ children }) => {
     }
   ]);
 
+  // Messaging State
+  const [chats, setChats] = useState(() => {
+    const saved = localStorage.getItem('dashboard_chats');
+    return saved ? JSON.parse(saved) : [
+      { 
+        id: 1, 
+        name: 'Dr. Adam Cooper', 
+        role: 'Oncologist', 
+        avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=200',
+        lastMsg: 'Your lab results look promising. Let\'s discuss in our next visit.',
+        time: '10:45 AM',
+        unread: 1,
+        online: true,
+        messages: [
+          { id: 1, text: 'Hello Doctor, I wanted to follow up on my last report.', sent: true, time: '10:30 AM' },
+          { id: 2, text: 'Hello! I have reviewed them.', sent: false, time: '10:35 AM' },
+          { id: 3, text: 'Your lab results look promising. Let\'s discuss in our next visit.', sent: false, time: '10:45 AM' },
+        ]
+      },
+      { 
+        id: 2, 
+        name: 'City Central Pharmacy', 
+        role: 'Pharmacy', 
+        avatar: 'https://images.unsplash.com/photo-1576602976047-174e57a47881?q=80&w=200',
+        lastMsg: 'The Panadol Extra you ordered is ready for pickup.',
+        time: 'Yesterday',
+        unread: 0,
+        online: false,
+        messages: [
+          { id: 1, text: 'The Panadol Extra you ordered is ready for pickup.', sent: false, time: '3:00 PM' },
+        ]
+      }
+    ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('dashboard_chats', JSON.stringify(chats));
+  }, [chats]);
+
   // Actions
   const cancelAppointment = (id) => {
     setAppointments(prev => prev.map(app => 
@@ -99,17 +138,57 @@ export const DashboardProvider = ({ children }) => {
     updateOrder(id, 'cancelled');
   };
 
+  const sendMessage = (chatId, text) => {
+    setChats(prev => prev.map(chat => {
+      if (chat.id === chatId) {
+        const newMessage = {
+          id: Date.now(),
+          text,
+          sent: true,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+        return {
+          ...chat,
+          messages: [...chat.messages, newMessage],
+          lastMsg: text,
+          time: 'Just now'
+        };
+      }
+      return chat;
+    }));
+  };
+
+  const deleteMessage = (chatId, messageId) => {
+    setChats(prev => prev.map(chat => {
+      if (chat.id === chatId) {
+        return {
+          ...chat,
+          messages: chat.messages.filter(m => m.id !== messageId)
+        };
+      }
+      return chat;
+    }));
+  };
+
+  const deleteChat = (chatId) => {
+    setChats(prev => prev.filter(c => c.id !== chatId));
+  };
+
   const value = {
     appointments,
     vaultRecords,
     orders,
+    chats,
     cancelAppointment,
     rescheduleAppointment,
     addVaultRecord,
     deleteVaultRecord,
     updateOrder,
     cancelOrder,
-    updateProfile
+    updateProfile,
+    sendMessage,
+    deleteMessage,
+    deleteChat
   };
 
   return (
