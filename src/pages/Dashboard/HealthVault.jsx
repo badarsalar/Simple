@@ -1,0 +1,347 @@
+import React, { useState } from 'react';
+import { 
+  ShieldCheck, 
+  Plus, 
+  FileText, 
+  Image as ImageIcon, 
+  Download, 
+  Share2, 
+  Search, 
+  Filter,
+  Eye,
+  CheckCircle,
+  MoreVertical,
+  X,
+  Send,
+  Trash2,
+  AlertCircle,
+  FileCheck,
+  ArrowRight,
+  RefreshCw,
+  Calendar
+} from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { useDashboard } from '../../context/DashboardContext';
+import StoreSelectionModal from '../../components/StoreSelectionModal';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const HealthVault = () => {
+  const { user, addNotification } = useAuth();
+  const { vaultRecords, addVaultRecord, deleteVaultRecord } = useDashboard();
+  const [activeTab, setActiveTab] = useState('all');
+  const [showUpload, setShowUpload] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState(null);
+  const [showStoreSelector, setShowStoreSelector] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+  
+  const handleForwardSelect = (record) => {
+    setSelectedRecord(record);
+    setShowStoreSelector(true);
+  };
+
+  const handleForwardComplete = (store) => {
+    addNotification({
+      title: 'Manual Order Initiated',
+      message: `${selectedRecord?.name} successfully forwarded to ${store.name}. Store will verify and contact you soon.`,
+      type: 'success',
+      time: 'Just now'
+    });
+  };
+
+  const handleDeleteRecord = (id) => {
+    deleteVaultRecord(id);
+    addNotification({
+      title: 'Record Removed',
+      message: 'The medical record has been permanently deleted from your vault.',
+      type: 'warning'
+    });
+    setShowDeleteConfirm(null);
+  };
+
+  const handleUploadSubmit = (e) => {
+    e.preventDefault();
+    setIsUploading(true);
+    
+    // Simulate File Upload
+    setTimeout(() => {
+      const newRecord = {
+        id: Date.now(),
+        type: 'Image',
+        name: 'Physical Prescription - ' + new Date().toLocaleDateString(),
+        doctor: 'Self Uploaded',
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        status: 'Pending Approval'
+      };
+      addVaultRecord(newRecord);
+      setIsUploading(false);
+      setShowUpload(false);
+      addNotification({
+        title: 'Upload Successful',
+        message: 'Your record has been uploaded and is waiting for provider verification.',
+        type: 'success'
+      });
+    }, 1500);
+  };
+
+  const filteredRecords = vaultRecords.filter(record => {
+    if (activeTab === 'all') return true;
+    if (activeTab === 'digital') return record.type === 'Digital';
+    if (activeTab === 'images') return record.type === 'Image';
+    return true;
+  });
+
+  return (
+    <div className="p-6 lg:p-12 space-y-12">
+      <motion.div 
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6"
+      >
+         <div className="space-y-2">
+            <h1 className="text-3xl lg:text-4xl font-black text-dark tracking-tight italic uppercase leading-none">Health <span className="text-primary italic">Vault</span></h1>
+            <p className="text-slate-400 font-bold italic text-sm">Securely store and manage your digital health records.</p>
+         </div>
+         <motion.button 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setShowUpload(true)}
+            className="flex items-center gap-3 px-8 py-4 bg-primary text-white rounded-2xl text-[10px] font-black uppercase italic tracking-widest shadow-xl shadow-primary/20 hover:scale-105 transition-all outline-none"
+         >
+            <Plus className="w-4 h-4" /> Upload Record
+         </motion.button>
+      </motion.div>
+
+      {/* Tabs & Search */}
+      <motion.div 
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.1 }}
+        className="flex flex-col md:flex-row justify-between items-center gap-6 bg-white p-4 rounded-[2.5rem] border border-slate-100 shadow-sm"
+      >
+         <div className="flex gap-2 p-1.5 bg-slate-50 rounded-2xl">
+            {['all', 'digital', 'images'].map(tab => (
+               <button 
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-8 py-2.5 rounded-xl text-[10px] font-black uppercase italic tracking-widest transition-all ${activeTab === tab ? 'bg-white text-primary shadow-xl shadow-primary/10' : 'text-slate-400 hover:text-dark'}`}
+               >
+                  {tab}
+               </button>
+            ))}
+         </div>
+         <div className="relative w-full md:w-96 group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-primary transition-colors" />
+            <input 
+               type="text" 
+               placeholder="Search records..." 
+               className="w-full pl-12 pr-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-[10px] font-black uppercase italic tracking-widest text-dark focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all placeholder:text-slate-400"
+            />
+         </div>
+      </motion.div>
+
+      {/* Record Grid */}
+      <motion.div 
+        layout
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+      >
+         <AnimatePresence mode='popLayout'>
+           {filteredRecords.map((record) => (
+              <motion.div 
+                key={record.id}
+                layout
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                className="bg-white p-8 rounded-[3.5rem] border border-slate-100 shadow-sm hover:shadow-2xl transition-all group relative overflow-hidden flex flex-col justify-between"
+              >
+                 <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-primary/5 transition-all"></div>
+                 
+                 <div>
+                    <div className="flex justify-between items-start mb-8">
+                       <div className={`w-16 h-16 rounded-[2rem] flex items-center justify-center transition-transform group-hover:scale-110 shadow-lg ${record.type === 'Digital' ? 'bg-primary/10 text-primary' : 'bg-amber-50 text-amber-500'}`}>
+                          {record.type === 'Digital' ? <FileText className="w-8 h-8" /> : <ImageIcon className="w-8 h-8" />}
+                       </div>
+                       <div className="flex gap-1">
+                          <button 
+                             onClick={() => setShowDeleteConfirm(record.id)}
+                             className="p-3 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all"
+                          >
+                             <Trash2 className="w-5 h-5" />
+                          </button>
+                          <button className="p-3 text-slate-300 hover:text-dark hover:bg-slate-50 rounded-xl transition-all">
+                             <MoreVertical className="w-5 h-5" />
+                          </button>
+                       </div>
+                    </div>
+
+                    <div className="space-y-4">
+                       <div className="space-y-1">
+                          <h4 className="text-lg font-black text-dark italic uppercase leading-tight truncate pr-4">{record.name}</h4>
+                          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2 flex items-center gap-1.5 leading-none italic">
+                             <Stethoscope className="w-3 h-3" /> {record.doctor}
+                          </p>
+                       </div>
+                       
+                       <div className="flex items-center justify-between pt-6 border-t border-slate-50">
+                          <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 italic">
+                             <Calendar className="w-3.5 h-3.5" /> {record.date}
+                          </div>
+                          <span className={`text-[9px] font-black uppercase italic px-3 py-1.5 rounded-full border ${record.status === 'Verified' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
+                             {record.status}
+                          </span>
+                       </div>
+                    </div>
+                 </div>
+
+                 <div className="mt-10 flex gap-3">
+                    <button className="flex-1 py-4 bg-dark text-white rounded-2xl text-[9px] font-black uppercase italic tracking-widest hover:bg-primary transition-all flex items-center justify-center gap-3 overflow-hidden group/btn shadow-xl shadow-dark/10 hover:shadow-primary/20">
+                       <Eye className="w-4 h-4" /> View <ArrowRight className="w-3 h-3 group-hover/btn:translate-x-1 transition-transform" />
+                    </button>
+                    <button 
+                      onClick={() => handleForwardSelect(record)}
+                      className="flex-1 py-4 bg-primary/5 border border-primary/10 rounded-2xl text-[9px] font-black uppercase italic tracking-widest text-primary hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-3"
+                    >
+                       <Send className="w-4 h-4 rotate-12" /> Forward
+                    </button>
+                 </div>
+              </motion.div>
+           ))}
+         </AnimatePresence>
+
+         {/* Add New Record Trigger */}
+         <motion.button 
+            layout
+            onClick={() => setShowUpload(true)}
+            className="bg-white/50 border-4 border-dashed border-slate-200 rounded-[3.5rem] p-10 flex flex-col items-center justify-center text-center gap-6 hover:border-primary/40 hover:bg-white transition-all group min-h-[350px]"
+         >
+            <div className="w-20 h-20 bg-slate-100 rounded-[2.5rem] flex items-center justify-center text-slate-300 group-hover:bg-primary group-hover:text-white transition-all shadow-xl group-hover:rotate-12">
+               <Plus className="w-10 h-10" />
+            </div>
+            <div className="space-y-1">
+               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic group-hover:text-dark">Quick Vault Upload</p>
+               <p className="text-[9px] font-bold text-slate-300 uppercase italic">PDF, JPG or PNG</p>
+            </div>
+         </motion.button>
+      </motion.div>
+
+      {/* Upload Modal */}
+      <AnimatePresence>
+        {showUpload && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[1000] flex items-center justify-center p-6 bg-dark/80 backdrop-blur-md"
+          >
+             <motion.div 
+               initial={{ scale: 0.9, y: 20 }}
+               animate={{ scale: 1, y: 0 }}
+               exit={{ scale: 0.9, y: 20 }}
+               className="bg-white w-full max-w-xl rounded-[4rem] overflow-hidden shadow-2xl relative"
+              >
+                <button 
+                  onClick={() => setShowUpload(false)}
+                  className="absolute top-8 right-8 p-3 bg-slate-50 rounded-full text-slate-400 hover:text-dark transition-all z-[10]"
+                >
+                   <X className="w-6 h-6" />
+                </button>
+                
+                <form onSubmit={handleUploadSubmit} className="p-12 lg:p-16 space-y-10 text-center">
+                   <div className="space-y-2">
+                      <h3 className="text-3xl font-black italic text-dark uppercase tracking-tight leading-none">Vault <span className="text-primary italic">Transmit</span></h3>
+                      <p className="text-slate-400 font-bold italic text-sm">Upload physical prescriptions or reports for verification.</p>
+                   </div>
+
+                   <div className="border-4 border-dashed border-slate-100 rounded-[3.5rem] p-20 flex flex-col items-center gap-8 hover:border-primary/20 hover:bg-slate-50/50 transition-all cursor-pointer group relative">
+                      <div className={`w-24 h-24 rounded-[2.5rem] flex items-center justify-center transition-all shadow-xl
+                         ${isUploading ? 'bg-primary text-white animate-pulse' : 'bg-primary/5 text-primary group-hover:scale-110'}`}>
+                         {isUploading ? <RefreshCw className="w-10 h-10 animate-spin" /> : <ImageIcon className="w-10 h-10" />}
+                      </div>
+                      <div>
+                         <p className="text-xl font-black text-dark italic uppercase">{isUploading ? 'Transmitting...' : 'Tap to Upload'}</p>
+                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2 italic">Up to 15MB Secured Link</p>
+                      </div>
+                      <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" disabled={isUploading} />
+                   </div>
+
+                   <div className="flex gap-4 pt-10">
+                      <button 
+                         type="submit"
+                         disabled={isUploading}
+                         className="flex-1 py-6 bg-dark text-white rounded-[2rem] text-xs font-black uppercase italic tracking-widest shadow-2xl shadow-dark/20 hover:scale-[1.02] transition-all disabled:opacity-50"
+                      >
+                         Confirm Upload
+                      </button>
+                      <button 
+                        type="button"
+                        onClick={() => setShowUpload(false)}
+                        className="flex-1 py-6 bg-slate-50 border border-slate-100 text-dark rounded-[2rem] text-xs font-black uppercase italic tracking-widest hover:bg-slate-100 transition-all"
+                      >
+                         Cancel
+                      </button>
+                    </div>
+                 </form>
+              </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Delete Confirmation */}
+      <AnimatePresence>
+        {showDeleteConfirm && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[2000] flex items-center justify-center p-6 bg-dark/80 backdrop-blur-md"
+          >
+             <motion.div 
+                initial={{ scale: 0.9, y: 20 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.9, y: 20 }}
+                className="bg-white w-full max-w-sm rounded-[3.5rem] p-12 text-center shadow-2xl relative"
+              >
+                <div className="w-24 h-24 bg-rose-50 rounded-[3rem] flex items-center justify-center text-rose-500 mx-auto mb-8 shadow-inner">
+                   <AlertCircle className="w-10 h-10" />
+                </div>
+                <h3 className="text-3xl font-black text-dark italic uppercase leading-none mb-4">Purge <span className="text-rose-500 italic">Record?</span></h3>
+                <p className="text-slate-500 font-bold italic text-sm mb-12 leading-relaxed">This record will be permanently wiped from the vault server.</p>
+                <div className="space-y-4">
+                   <button 
+                      onClick={() => handleDeleteRecord(showDeleteConfirm)}
+                      className="w-full py-5 bg-rose-500 text-white rounded-3xl text-[10px] font-black uppercase italic tracking-widest shadow-xl shadow-rose-500/20 hover:scale-105 transition-all"
+                   >
+                      Wipe Record
+                   </button>
+                   <button 
+                      onClick={() => setShowDeleteConfirm(null)}
+                      className="w-full py-5 bg-slate-50 text-dark rounded-3xl text-[10px] font-black uppercase italic tracking-widest hover:bg-slate-100 transition-all font-bold"
+                   >
+                      Cancel Action
+                   </button>
+                </div>
+             </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <StoreSelectionModal 
+        isOpen={showStoreSelector}
+        onClose={() => setShowStoreSelector(false)}
+        onForward={handleForwardComplete}
+        recordName={selectedRecord?.name}
+      />
+    </div>
+  );
+};
+
+const Stethoscope = (props) => (
+  <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3" />
+    <path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4" />
+    <circle cx="20" cy="10" r="2" />
+  </svg>
+);
+
+export default HealthVault;

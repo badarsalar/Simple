@@ -34,6 +34,7 @@ const BookAppointment = () => {
   const [selectedDate, setSelectedDate] = useState(0);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [isOnline, setIsOnline] = useState(true);
+  const [paymentMethod, setPaymentMethod] = useState('online');
   
   const [patientData, setPatientData] = useState({
     name: '',
@@ -57,14 +58,13 @@ const BookAppointment = () => {
     else if (step === 2 && patientData.name && patientData.phone) setStep(3);
   };
 
-  const currentStepLabel = step === 1 ? 'Select Time' : step === 2 ? 'Patient Details' : 'Confirm';
-
   return (
     <div className="min-h-screen bg-[#f8f9fc]">
       <Navbar />
       
       <div className="pt-20 pb-12 max-w-4xl mx-auto px-4 sm:px-6">
         
+        {/* ... (breadcrumb and back button unchanged) ... */}
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 mb-6">
           <Link to="/" className="hover:text-primary">Home</Link>
@@ -343,7 +343,7 @@ const BookAppointment = () => {
 
             {step === 3 && (
                <div className="animate-in fade-in slide-in-from-right-4 duration-300">
-                  <div className="bg-slate-50 rounded-xl border border-slate-200 p-6 space-y-6">
+                  <div className="bg-slate-50 rounded-xl border border-slate-200 p-6 space-y-8">
                      
                      <div className="flex items-center gap-3 border-b border-slate-200 pb-4">
                         <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
@@ -351,7 +351,7 @@ const BookAppointment = () => {
                         </div>
                         <div>
                           <h3 className="text-base font-bold text-dark">Appointment Summary</h3>
-                          <p className="text-xs font-medium text-slate-500">Please review before confirming</p>
+                          <p className="text-xs font-medium text-slate-500">Last step before confirmation</p>
                         </div>
                      </div>
 
@@ -370,37 +370,56 @@ const BookAppointment = () => {
                         </div>
                      </div>
 
-                     <div className="bg-white p-4 rounded-lg border border-slate-100">
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Patient Details</p>
-                        <div className="flex items-center gap-2 mb-1">
-                          <User className="w-4 h-4 text-slate-400" />
-                          <p className="text-sm font-bold text-dark">{patientData.name} <span className="text-xs text-slate-500 font-medium">({patientData.age} {patientData.gender})</span></p>
+                     {/* Payment Selection */}
+                     <div className="space-y-4">
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Select Payment Method</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                           <button 
+                             onClick={() => setPaymentMethod('online')}
+                             className={`p-4 rounded-xl border-2 transition-all text-left flex items-center gap-3 ${paymentMethod === 'online' ? 'border-primary bg-primary/5 shadow-sm' : 'border-slate-100 hover:border-slate-200 bg-white'}`}
+                           >
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${paymentMethod === 'online' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-slate-100 text-slate-400'}`}>
+                                 <ShieldCheck className="w-4 h-4" />
+                              </div>
+                              <div>
+                                 <p className={`text-[10px] font-black uppercase italic ${paymentMethod === 'online' ? 'text-primary' : 'text-dark'}`}>Secure Online</p>
+                                 <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Pay Now (10% Off)</p>
+                              </div>
+                           </button>
+
+                           <button 
+                             onClick={() => setPaymentMethod('clinic')}
+                             className={`p-4 rounded-xl border-2 transition-all text-left flex items-center gap-3 ${paymentMethod === 'clinic' ? 'border-primary bg-primary/5 shadow-sm' : 'border-slate-100 hover:border-slate-200 bg-white'}`}
+                           >
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${paymentMethod === 'clinic' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-slate-100 text-slate-400'}`}>
+                                 <Clock className="w-4 h-4" />
+                              </div>
+                              <div>
+                                 <p className={`text-[10px] font-black uppercase italic ${paymentMethod === 'clinic' ? 'text-primary' : 'text-dark'}`}>Pay at Clinic</p>
+                                 <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Pay during visit</p>
+                              </div>
+                           </button>
                         </div>
-                        <p className="text-xs font-medium text-slate-500 ml-6">{patientData.phone}</p>
                      </div>
 
                      <div className="flex justify-between items-center border-t border-slate-200 pt-4">
-                        <span className="text-sm font-bold text-slate-600">Total Fee</span>
-                        <span className="text-xl font-bold text-primary">Rs. {isOnline ? '2,000' : '2,500'}</span>
+                        <span className="text-sm font-bold text-slate-600 italic">Total Consultation Fee</span>
+                        <span className="text-xl font-black text-primary italic">Rs. {isOnline ? '2,000' : '2,500'}</span>
                      </div>
                   </div>
 
-                  <p className="text-center text-xs font-medium text-slate-500 mt-6 mb-6 flex items-center justify-center gap-1">
-                    <ShieldCheck className="w-4 h-4 text-emerald-500" /> Pay securely at the clinic or via online link before consultation.
-                  </p>
-
-                  <div className="flex justify-between pt-2">
+                  <div className="flex justify-between pt-8">
                     <button 
                       onClick={() => setStep(2)}
-                      className="px-6 py-3 rounded-xl font-bold text-sm bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition-all"
+                      className="px-6 py-3 rounded-xl font-bold text-sm bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-2"
                     >
-                      Edit Details
+                      <ArrowLeft className="w-4 h-4" /> Edit Details
                     </button>
                     <button 
                       onClick={() => navigate('/orders')}
-                      className="px-8 py-3 rounded-xl font-bold text-sm bg-primary text-white shadow-md hover:bg-primary/90 transition-all"
+                      className="px-10 py-3 rounded-xl font-black text-xs uppercase italic tracking-widest bg-dark text-white shadow-xl shadow-dark/20 hover:scale-105 transition-all flex items-center gap-3"
                     >
-                      Confirm Booking
+                      <ShieldCheck className="w-4 h-4" /> Confirm & Pay
                     </button>
                   </div>
                </div>

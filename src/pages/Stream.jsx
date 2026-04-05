@@ -145,6 +145,7 @@ const Stream = () => {
   const [isMuted, setIsMuted] = useState(false);
   const [likeCount, setLikeCount] = useState(stream.likeCount);
   const [liked, setLiked] = useState(false);
+  const [following, setFollowing] = useState(false);
   const [saved, setSaved] = useState(false);
   const [activeTab, setActiveTab] = useState('chat');
   const [guestName, setGuestName] = useState('');
@@ -271,6 +272,26 @@ const Stream = () => {
   const handleLikeStream = () => {
     setLiked(l => !l);
     setLikeCount(l => liked ? l - 1 : l + 1);
+  };
+
+  const handleFollow = () => {
+    setFollowing(f => !f);
+    if (!following) {
+      showToast(`Now following ${stream.hostName}!`, 'success');
+      // Add system message to chat
+      setComments(prev => [...prev, {
+        id: Date.now(),
+        user: 'System',
+        avatar: null,
+        message: `${user?.name || 'A viewer'} just followed the Specialist! 🔔`,
+        time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+        isHost: false,
+        isPinned: false,
+        role: 'Moderator',
+        likes: 0,
+        liked: false,
+      }]);
+    }
   };
 
   const pinnedComments = comments.filter(c => c.isPinned);
@@ -418,8 +439,13 @@ const Stream = () => {
                     <p className="text-slate-400 text-[10px] font-black uppercase italic tracking-widest">{stream.hostFollowers} followers</p>
                   </div>
                 </div>
-                <button className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-xl text-[10px] font-black uppercase italic tracking-widest hover:scale-105 transition-all shadow-lg shadow-primary/20">
-                  <Bell className="w-3.5 h-3.5" /> Follow Specialist
+                <button 
+                  onClick={handleFollow}
+                  className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase italic tracking-widest transition-all shadow-lg
+                    ${following ? 'bg-emerald-500 text-white shadow-emerald-500/20' : 'bg-primary text-white shadow-primary/20 hover:scale-105'}`}
+                >
+                  {following ? <CheckCircle className="w-3.5 h-3.5" /> : <Bell className="w-3.5 h-3.5" />}
+                  {following ? 'Following Specialist' : 'Follow Specialist'}
                 </button>
                 <div className="ml-auto flex items-center gap-4 text-slate-400 text-[10px] font-black uppercase italic tracking-widest">
                   <span className="flex items-center gap-1.5"><TrendingUp className="w-3.5 h-3.5 text-emerald-500" /> {likeCount.toLocaleString()} Likes</span>

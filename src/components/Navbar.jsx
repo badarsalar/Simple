@@ -192,7 +192,16 @@ const Navbar = () => {
                       <p className="text-xs font-bold text-dark truncate">{user.name}</p>
                       <p className="text-[10px] text-slate-400 font-medium capitalize">{user.role}</p>
                     </div>
-                    <div className="h-px bg-slate-50 my-1" />
+                    <div className="py-1">
+                      <Link 
+                        to="/dashboard" 
+                        onClick={() => setIsProfileOpen(false)}
+                        className="block w-full text-left px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors flex items-center gap-2"
+                      >
+                        <Activity className="w-4 h-4" /> My Dashboard
+                      </Link>
+                    </div>
+                    <div className="h-px bg-slate-50" />
                     <button 
                       onClick={handleLogout}
                       className="block w-full text-left px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-red-500 transition-colors flex items-center gap-2"

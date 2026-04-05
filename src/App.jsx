@@ -8,10 +8,9 @@ import AuthLayout from './layouts/AuthLayout';
 import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
 import SocialAuthCompletion from './pages/Auth/SocialAuthCompletion';
-import MobileBottomNav from './components/MobileBottomNav';
 
-// Dashboards removed
 
+import DashboardOverview from './pages/Dashboard/DashboardOverview';
 import Doctors from './pages/Doctors';
 import Clinics from './pages/Clinics';
 import ClinicDetails from './pages/ClinicDetails';
@@ -33,7 +32,7 @@ function App() {
       <PrescriptionProvider>
         <CartProvider>
           <Router>
-          <div className="pb-16 lg:pb-0 hidden-scrollbar">
+          <div>
           <Routes>
             <Route path="/" element={<LandingPage />} />
             
@@ -43,7 +42,25 @@ function App() {
               <Route path="/auth/completion" element={<SocialAuthCompletion />} />
             </Route>
 
-            {/* Dashboard routes removed */}
+            {/* Dashboard routes */}
+            <Route path="/dashboard" element={<DashboardOverview />} />
+            <Route path="/dashboard/appointments" element={<DashboardOverview />} />
+            <Route path="/dashboard/vault" element={<DashboardOverview />} />
+            <Route path="/dashboard/orders" element={<Orders />} />
+            <Route path="/dashboard/analytics" element={<DashboardOverview />} />
+            <Route path="/dashboard/inventory" element={<DashboardOverview />} />
+            <Route path="/dashboard/staff" element={<DashboardOverview />} />
+            <Route path="/dashboard/studio" element={<DashboardOverview />} />
+            <Route path="/dashboard/approvals" element={<DashboardOverview />} />
+            <Route path="/dashboard/moderation" element={<DashboardOverview />} />
+            <Route path="/dashboard/financials" element={<DashboardOverview />} />
+            <Route path="/dashboard/favorites" element={<DashboardOverview />} />
+            <Route path="/dashboard/prescriptions" element={<DashboardOverview />} />
+            <Route path="/dashboard/settings" element={<DashboardOverview />} />
+            <Route path="/dashboard/bug-report" element={<DashboardOverview />} />
+            <Route path="/dashboard/clinic" element={<DashboardOverview />} />
+            <Route path="/dashboard/media" element={<DashboardOverview />} />
+
             <Route path="/stream/:id" element={<Stream />} />
             <Route path="/streams" element={<LiveStreams />} />
             <Route path="/doctors" element={<Doctors />} />
@@ -62,7 +79,6 @@ function App() {
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
-          <MobileBottomNav />
           </div>
         </Router>
       </CartProvider>

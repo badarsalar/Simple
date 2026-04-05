@@ -23,30 +23,28 @@ export const CartProvider = ({ children }) => {
   }, [cart]);
 
   const addToCart = (product) => {
-    setCart(prevCart => {
-      const existingItem = prevCart.find(item => item.id === product.id);
-      if (existingItem) {
-        addNotification({
-          title: 'Quantity Updated',
-          message: `${product.name} quantity increased to ${existingItem.quantity + 1}`,
-          type: 'info'
-        });
-        return prevCart.map(item =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      }
+    const existingItem = cart.find(item => item.id === product.id);
+    if (existingItem) {
+      addNotification({
+        title: 'Quantity Updated',
+        message: `${product.name} quantity increased to ${existingItem.quantity + 1}`,
+        type: 'info'
+      });
+      setCart(prevCart => prevCart.map(item =>
+        item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+      ));
+    } else {
       addNotification({
         title: 'Added to Cart',
         message: `${product.name} has been added to your cart`,
         type: 'success'
       });
-      return [...prevCart, { ...product, quantity: 1 }];
-    });
+      setCart(prevCart => [...prevCart, { ...product, quantity: 1 }]);
+    }
   };
 
   const removeFromCart = (productId) => {
     const item = cart.find(item => item.id === productId);
-    setCart(prevCart => prevCart.filter(item => item.id !== productId));
     if (item) {
       addNotification({
         title: 'Removed from Cart',
@@ -54,6 +52,7 @@ export const CartProvider = ({ children }) => {
         type: 'warning'
       });
     }
+    setCart(prevCart => prevCart.filter(item => item.id !== productId));
   };
 
   const updateQuantity = (productId, quantity) => {
