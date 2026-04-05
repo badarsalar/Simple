@@ -24,7 +24,11 @@ const Appointments = () => {
   const { appointments, cancelAppointment } = useDashboard();
   const [filter, setFilter] = useState('upcoming');
   const [showCancelConfirm, setShowCancelConfirm] = useState(null);
+  const [showRescheduleModal, setShowRescheduleModal] = useState(null);
   const [isConnecting, setIsConnecting] = useState(null);
+  const [rescheduleData, setRescheduleData] = useState({ date: '', time: '' });
+
+  const { rescheduleAppointment } = useDashboard();
 
   const handleCancel = (id) => {
     cancelAppointment(id);
@@ -36,12 +40,22 @@ const Appointments = () => {
     setShowCancelConfirm(null);
   };
 
-  const handleReschedule = (id) => {
+  const handleRescheduleInit = (app) => {
+    setShowRescheduleModal(app);
+    setRescheduleData({ date: app.date, time: app.time });
+  };
+
+  const handleRescheduleSubmit = (e) => {
+    e.preventDefault();
+    if (!rescheduleData.date || !rescheduleData.time) return;
+
+    rescheduleAppointment(showRescheduleModal.id, rescheduleData.date, rescheduleData.time);
     addNotification({
-      title: 'Reschedule Initiated',
-      message: 'Please select a new slot for your appointment.',
-      type: 'info'
+      title: 'Appointment Changed',
+      message: `Your visit with ${showRescheduleModal.doctor} has been moved to ${rescheduleData.date} at ${rescheduleData.time}.`,
+      type: 'success'
     });
+    setShowRescheduleModal(null);
   };
 
   const handleJoin = (id) => {
@@ -151,7 +165,7 @@ const Appointments = () => {
                          {app.status !== 'completed' && app.status !== 'cancelled' && (
                             <>
                                <button 
-                                  onClick={() => handleReschedule(app.id)}
+                                  onClick={() => handleRescheduleInit(app)}
                                   className="flex-1 px-6 py-3 bg-slate-50 border border-slate-100 text-dark rounded-2xl text-[9px] font-black uppercase italic tracking-widest hover:bg-slate-100 transition-all flex items-center justify-center gap-2"
                                >
                                   <RefreshCw className="w-3 h-3" /> Reschedule
@@ -181,6 +195,75 @@ const Appointments = () => {
            )}
          </AnimatePresence>
       </motion.div>
+
+      {/* Cancel Confirmation Modal */}
+      {/* Reschedule Modal */}
+      <AnimatePresence>
+        {showRescheduleModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[2000] flex items-center justify-center p-6 bg-dark/80 backdrop-blur-md"
+          >
+             <motion.div 
+               initial={{ scale: 0.9, y: 20 }}
+               animate={{ scale: 1, y: 0 }}
+               exit={{ scale: 0.9, y: 20 }}
+               className="bg-white w-full max-w-md rounded-[3rem] p-12 text-center shadow-2xl relative"
+              >
+                <button 
+                  onClick={() => setShowRescheduleModal(null)}
+                  className="absolute top-8 right-8 p-3 bg-slate-50 rounded-full text-slate-400 hover:text-dark transition-all"
+                >
+                   <X className="w-6 h-6" />
+                </button>
+
+                <div className="w-20 h-20 bg-primary/5 rounded-[2rem] flex items-center justify-center text-primary mx-auto mb-6">
+                   <Clock className="w-8 h-8" />
+                </div>
+                
+                <h3 className="text-2xl font-black text-dark italic uppercase leading-none mb-3">Reschedule <span className="text-primary italic">Visit</span></h3>
+                <p className="text-slate-500 font-bold italic text-xs mb-10 leading-relaxed uppercase tracking-widest">{showRescheduleModal.doctor}</p>
+                
+                <form onSubmit={handleRescheduleSubmit} className="space-y-6">
+                   <div className="space-y-2 text-left">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">New Date</label>
+                      <input 
+                        type="date" 
+                        required
+                        className="w-full px-8 py-5 bg-slate-50 border border-slate-100 rounded-3xl text-sm font-bold text-dark focus:ring-4 focus:ring-primary/10 transition-all"
+                        value={rescheduleData.date}
+                        onChange={(e) => setRescheduleData({...rescheduleData, date: e.target.value})}
+                      />
+                   </div>
+                   <div className="space-y-2 text-left">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Preferred Time</label>
+                      <select 
+                        required
+                        className="w-full px-8 py-5 bg-slate-50 border border-slate-100 rounded-3xl text-sm font-bold text-dark focus:ring-4 focus:ring-primary/10 transition-all appearance-none"
+                        value={rescheduleData.time}
+                        onChange={(e) => setRescheduleData({...rescheduleData, time: e.target.value})}
+                      >
+                         <option value="09:00 AM">09:00 AM</option>
+                         <option value="10:30 AM">10:30 AM</option>
+                         <option value="12:00 PM">12:00 PM</option>
+                         <option value="02:15 PM">02:15 PM</option>
+                         <option value="04:45 PM">04:45 PM</option>
+                      </select>
+                   </div>
+
+                   <button 
+                      type="submit"
+                      className="w-full py-5 bg-dark text-white rounded-[2rem] text-[10px] font-black uppercase italic tracking-widest shadow-2xl shadow-dark/20 hover:bg-primary transition-all flex items-center justify-center gap-3"
+                   >
+                      Update Schedule <ArrowRight className="w-4 h-4" />
+                   </button>
+                </form>
+             </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Cancel Confirmation Modal */}
       <AnimatePresence>

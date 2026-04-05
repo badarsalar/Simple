@@ -78,10 +78,15 @@ export const DashboardProvider = ({ children }) => {
     setVaultRecords(prev => prev.filter(r => r.id !== id));
   };
 
-  const updateOrder = (id, newStatus) => {
-    setOrders(prev => prev.map(o => 
-      o.id === id ? { ...o, status: newStatus } : o
+  const rescheduleAppointment = (id, newDate, newTime) => {
+    setAppointments(prev => prev.map(app => 
+      app.id === id ? { ...app, date: newDate, time: newTime, status: 'confirmed' } : app
     ));
+  };
+
+  const updateProfile = (newData) => {
+    // In a real app, this would be an API call
+    console.log('Updating profile with:', newData);
   };
 
   const value = {
@@ -89,9 +94,11 @@ export const DashboardProvider = ({ children }) => {
     vaultRecords,
     orders,
     cancelAppointment,
+    rescheduleAppointment,
     addVaultRecord,
     deleteVaultRecord,
-    updateOrder
+    updateOrder,
+    updateProfile
   };
 
   return (

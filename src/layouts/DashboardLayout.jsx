@@ -18,7 +18,8 @@ import {
   Search,
   Menu,
   X,
-  Plus
+  Plus,
+  MessageSquare
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { DashboardProvider } from '../context/DashboardContext';
@@ -38,13 +39,16 @@ const DashboardLayout = ({ children }) => {
     const roleSpecific = {
       patient: [
         { name: 'My Appointments', icon: Calendar, path: '/dashboard/appointments' },
+        { name: 'Messages', icon: MessageSquare, path: '/dashboard/messages' },
+        { name: 'Digital Prescriptions', icon: FileText, path: '/dashboard/prescriptions' },
         { name: 'Health Vault', icon: ShieldCheck, path: '/dashboard/vault' },
-        { name: 'Recent Orders', icon: Package, path: '/dashboard/orders' },
+        { name: 'Order History', icon: Package, path: '/dashboard/orders' },
         { name: 'Favorites', icon: Heart, path: '/dashboard/favorites' },
         { name: 'Account Settings', icon: Settings, path: '/dashboard/settings' },
       ],
       doctor: [
         { name: 'Virtual Clinic', icon: Video, path: '/dashboard/clinic' },
+        { name: 'Messages', icon: MessageSquare, path: '/dashboard/messages' },
         { name: 'Appointments', icon: Calendar, path: '/dashboard/appointments' },
         { name: 'Digital Prescriptions', icon: FileText, path: '/dashboard/prescriptions' },
         { name: 'Analytics', icon: BarChart3, path: '/dashboard/analytics' },

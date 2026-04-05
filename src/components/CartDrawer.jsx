@@ -4,7 +4,7 @@ import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
 
 const CartDrawer = ({ isOpen, onClose }) => {
-  const { cart, removeFromCart, updateQuantity, cartTotal, clearCart, checkout, cartCount } = useCart();
+  const { cart, removeFromCart, updateQuantity, cartTotal, clearCart, checkout, cartCount, parsePrice } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleQuantityChange = (id, newQuantity) => {
@@ -16,7 +16,7 @@ const CartDrawer = ({ isOpen, onClose }) => {
     updateQuantity(id, newQuantity);
   };
 
-  const subtotal = cart.reduce((total, item) => total + parseFloat(item.price) * item.quantity, 0);
+  const subtotal = cart.reduce((total, item) => total + parsePrice(item.price) * item.quantity, 0);
   const deliveryFee = subtotal > 500 ? 0 : 50; // Free delivery over Rs. 500
   const tax = subtotal * 0.05; // 5% tax
   const total = subtotal + deliveryFee + tax;
@@ -115,8 +115,8 @@ const CartDrawer = ({ isOpen, onClose }) => {
                             </button>
                           </div>
                           <div className="text-right">
-                            <div className="text-sm font-bold text-primary">Rs. {(parseFloat(item.price) * item.quantity).toFixed(2)}</div>
-                            <div className="text-[10px] text-slate-400">Rs. {parseFloat(item.price).toFixed(2)} each</div>
+                            <div className="text-sm font-bold text-primary">Rs. {(parsePrice(item.price) * item.quantity).toFixed(2)}</div>
+                            <div className="text-[10px] text-slate-400">Rs. {parsePrice(item.price).toFixed(2)} each</div>
                           </div>
                         </div>
                       </div>

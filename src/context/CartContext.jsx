@@ -21,6 +21,13 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem('simple_healthcare_cart', JSON.stringify(cart));
   }, [cart]);
+  const parsePrice = (price) => {
+    if (typeof price === 'number') return price;
+    if (typeof price !== 'string') return 0;
+    const cleaned = price.replace(/[^\d.]/g, '');
+    const parsed = parseFloat(cleaned);
+    return isNaN(parsed) ? 0 : parsed;
+  };
 
   const addToCart = (product) => {
     const existingItem = cart.find(item => item.id === product.id);
@@ -89,7 +96,7 @@ export const CartProvider = ({ children }) => {
   const checkout = () => {
     if (cart.length === 0) return false;
 
-    const subtotal = cart.reduce((total, item) => total + parseFloat(item.price) * item.quantity, 0);
+    const subtotal = cart.reduce((total, item) => total + parsePrice(item.price) * item.quantity, 0);
     const deliveryFee = subtotal > 500 ? 0 : 50;
     const tax = subtotal * 0.05;
     const total = subtotal + deliveryFee + tax;
@@ -105,7 +112,7 @@ export const CartProvider = ({ children }) => {
   };
 
   // Calculate totals
-  const subtotal = cart.reduce((total, item) => total + parseFloat(item.price) * item.quantity, 0);
+  const subtotal = cart.reduce((total, item) => total + parsePrice(item.price) * item.quantity, 0);
   const deliveryFee = subtotal > 500 ? 0 : 50; // Free delivery over Rs. 500
   const tax = subtotal * 0.05; // 5% GST
   const cartTotal = subtotal + deliveryFee + tax;
@@ -123,7 +130,8 @@ export const CartProvider = ({ children }) => {
       cartCount,
       subtotal,
       deliveryFee,
-      tax
+      tax,
+      parsePrice
     }}>
       {children}
     </CartContext.Provider>

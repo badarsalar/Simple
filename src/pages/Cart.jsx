@@ -44,7 +44,16 @@ const Cart = () => {
     }
   };
 
-  const subtotal = cart.reduce((total, item) => total + parseFloat(item.price) * item.quantity, 0);
+  const parsePrice = (price) => {
+    if (typeof price === 'number') return price;
+    if (typeof price !== 'string') return 0;
+    // Remove "Rs." and any other non-numeric chars except decimal point
+    const cleaned = price.replace(/[^\d.]/g, '');
+    const parsed = parseFloat(cleaned);
+    return isNaN(parsed) ? 0 : parsed;
+  };
+
+  const subtotal = cart.reduce((total, item) => total + parsePrice(item.price) * item.quantity, 0);
   const deliveryFee = subtotal > 500 ? 0 : 150; // Free delivery over Rs. 500
   const tax = subtotal * 0.05; // 5% tax
   const discount = promoApplied ? subtotal * 0.2 : 0; // 20% discount

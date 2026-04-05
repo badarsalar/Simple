@@ -159,7 +159,7 @@ const ProviderProfile = () => {
                   <ul className="space-y-3 relative before:absolute before:inset-y-0 before:left-2 before:w-[1px] before:bg-slate-200 pl-6">
                     <li className="relative before:absolute before:top-2 before:-left-[1.05rem] before:w-2 before:h-2 before:bg-primary before:rounded-full">
                        <p className="text-sm font-bold text-dark">MBBS, FCPS ({doctor.specialty})</p>
-                       <p className="text-xs text-slate-500 mt-0.5 mt-0.5">Aga Khan University - 2010</p>
+                       <p className="text-xs text-slate-500 mt-0.5">Aga Khan University - 2010</p>
                     </li>
                   </ul>
                 </div>
@@ -325,17 +325,13 @@ const ProviderProfile = () => {
         </div>
       )}
 
-      {/* Sticky Mobile CTA */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 flex items-center justify-between z-[90] shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
-        <div>
-          <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Consultation Fee</p>
-          <p className="text-xl font-bold text-primary">Rs. {doctor.fee}</p>
-        </div>
+      {/* Floating Action Button for Mobile replaced regular bottom nav */}
+      <div className="lg:hidden fixed bottom-6 right-6 z-[100]">
         <button 
           onClick={() => document.getElementById('booking-widget')?.scrollIntoView({ behavior: 'smooth' })}
-          className="bg-primary text-white px-8 py-3 rounded-xl font-bold text-sm shadow-md hover:bg-primary/90 transition-transform active:scale-95"
+          className="w-14 h-14 bg-primary text-white rounded-full shadow-2xl shadow-primary/40 flex items-center justify-center"
         >
-          Book Appointment
+          <Calendar className="w-6 h-6" />
         </button>
       </div>
 

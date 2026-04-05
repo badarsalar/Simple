@@ -115,9 +115,10 @@ const Medicines = () => {
                </div>
             </div>
             
+            {/* Hide hero-level cart on desktop as it duplicates Navbar cart */}
             <button 
               onClick={() => setIsCartOpen(true)}
-              className="px-8 py-4 bg-white text-dark rounded-2xl text-sm font-bold hover:bg-slate-50 hover:scale-105 active:scale-95 transition-all flex items-center gap-3 shadow-2xl shadow-white/10"
+              className="md:hidden px-8 py-4 bg-white text-dark rounded-2xl text-sm font-bold hover:bg-slate-50 hover:scale-105 active:scale-95 transition-all flex items-center gap-3 shadow-2xl shadow-white/10"
             >
               <div className="relative">
                 <ShoppingBag className="w-5 h-5 text-primary" />
@@ -127,8 +128,7 @@ const Medicines = () => {
                   </span>
                 )}
               </div>
-              <span className="hidden sm:inline">View Cart {cartCount > 0 && `(${cartCount})`}</span>
-              <span className="sm:hidden">Cart {cartCount > 0 && `(${cartCount})`}</span>
+              <span>Cart {cartCount > 0 && `(${cartCount})`}</span>
             </button>
           </div>
           

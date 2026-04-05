@@ -34,6 +34,8 @@ const HealthVault = () => {
   const [showStoreSelector, setShowStoreSelector] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [showViewer, setShowViewer] = useState(false);
+  const [viewingRecord, setViewingRecord] = useState(null);
   
   const handleForwardSelect = (record) => {
     setSelectedRecord(record);
@@ -57,6 +59,36 @@ const HealthVault = () => {
       type: 'warning'
     });
     setShowDeleteConfirm(null);
+  };
+
+  const handleView = (record) => {
+    setViewingRecord(record);
+    setShowViewer(true);
+  };
+
+  const handleDownload = (record) => {
+    addNotification({
+      title: 'Generating PDF...',
+      message: `Preparing ${record.name} for secure download.`,
+      type: 'info'
+    });
+    
+    // Simulate complex background task
+    setTimeout(() => {
+      addNotification({
+        title: 'Download Ready',
+        message: 'Your health record has been downloaded successfully.',
+        type: 'success'
+      });
+      
+      // Actual download logic simulation
+      const link = document.createElement('a');
+      link.href = '#';
+      link.download = `${record.name}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }, 2000);
   };
 
   const handleUploadSubmit = (e) => {
@@ -194,17 +226,20 @@ const HealthVault = () => {
                     </div>
                  </div>
 
-                 <div className="mt-10 flex gap-3">
-                    <button className="flex-1 py-4 bg-dark text-white rounded-2xl text-[9px] font-black uppercase italic tracking-widest hover:bg-primary transition-all flex items-center justify-center gap-3 overflow-hidden group/btn shadow-xl shadow-dark/10 hover:shadow-primary/20">
+                  <div className="mt-10 flex gap-3">
+                    <button 
+                      onClick={() => handleView(record)}
+                      className="flex-1 py-4 bg-dark text-white rounded-2xl text-[9px] font-black uppercase italic tracking-widest hover:bg-primary transition-all flex items-center justify-center gap-3 overflow-hidden group/btn shadow-xl shadow-dark/10 hover:shadow-primary/20"
+                    >
                        <Eye className="w-4 h-4" /> View <ArrowRight className="w-3 h-3 group-hover/btn:translate-x-1 transition-transform" />
                     </button>
                     <button 
-                      onClick={() => handleForwardSelect(record)}
+                      onClick={() => handleDownload(record)}
                       className="flex-1 py-4 bg-primary/5 border border-primary/10 rounded-2xl text-[9px] font-black uppercase italic tracking-widest text-primary hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-3"
                     >
-                       <Send className="w-4 h-4 rotate-12" /> Forward
+                       <Download className="w-4 h-4" /> Download
                     </button>
-                 </div>
+                  </div>
               </motion.div>
            ))}
          </AnimatePresence>
@@ -288,38 +323,110 @@ const HealthVault = () => {
       </AnimatePresence>
 
       {/* Delete Confirmation */}
+      {/* Record Viewer Modal */}
       <AnimatePresence>
-        {showDeleteConfirm && (
+        {showViewer && viewingRecord && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[2000] flex items-center justify-center p-6 bg-dark/80 backdrop-blur-md"
+            className="fixed inset-0 z-[2000] flex items-center justify-center p-6 bg-dark/95 backdrop-blur-xl"
           >
              <motion.div 
-                initial={{ scale: 0.9, y: 20 }}
+                initial={{ scale: 0.9, y: 40 }}
                 animate={{ scale: 1, y: 0 }}
-                exit={{ scale: 0.9, y: 20 }}
-                className="bg-white w-full max-w-sm rounded-[3.5rem] p-12 text-center shadow-2xl relative"
+                exit={{ scale: 0.9, y: 40 }}
+                className="bg-white w-full max-w-4xl h-[90vh] rounded-[4rem] overflow-hidden flex flex-col relative shadow-2xl"
               >
-                <div className="w-24 h-24 bg-rose-50 rounded-[3rem] flex items-center justify-center text-rose-500 mx-auto mb-8 shadow-inner">
-                   <AlertCircle className="w-10 h-10" />
+                {/* Viewer Header */}
+                <div className="p-8 border-b border-slate-100 flex justify-between items-center bg-white z-10">
+                   <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
+                         <FileText className="w-6 h-6" />
+                      </div>
+                      <div>
+                         <h3 className="text-xl font-black text-dark italic uppercase leading-none">{viewingRecord.name}</h3>
+                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1 italic">Authorized Copy • ID: {viewingRecord.id}</p>
+                      </div>
+                   </div>
+                   <div className="flex items-center gap-3">
+                      <button 
+                         onClick={() => handleDownload(viewingRecord)}
+                         className="p-3 bg-slate-50 rounded-2xl text-slate-400 hover:text-primary transition-all"
+                      >
+                         <Download className="w-5 h-5" />
+                      </button>
+                      <button 
+                         onClick={() => setShowViewer(false)}
+                         className="p-3 bg-dark text-white rounded-2xl hover:bg-rose-500 transition-all"
+                      >
+                         <X className="w-5 h-5" />
+                      </button>
+                   </div>
                 </div>
-                <h3 className="text-3xl font-black text-dark italic uppercase leading-none mb-4">Purge <span className="text-rose-500 italic">Record?</span></h3>
-                <p className="text-slate-500 font-bold italic text-sm mb-12 leading-relaxed">This record will be permanently wiped from the vault server.</p>
-                <div className="space-y-4">
-                   <button 
-                      onClick={() => handleDeleteRecord(showDeleteConfirm)}
-                      className="w-full py-5 bg-rose-500 text-white rounded-3xl text-[10px] font-black uppercase italic tracking-widest shadow-xl shadow-rose-500/20 hover:scale-105 transition-all"
-                   >
-                      Wipe Record
-                   </button>
-                   <button 
-                      onClick={() => setShowDeleteConfirm(null)}
-                      className="w-full py-5 bg-slate-50 text-dark rounded-3xl text-[10px] font-black uppercase italic tracking-widest hover:bg-slate-100 transition-all font-bold"
-                   >
-                      Cancel Action
-                   </button>
+
+                {/* Viewer Content */}
+                <div className="flex-1 overflow-y-auto p-12 bg-slate-100/50">
+                    <div className="max-w-2xl mx-auto space-y-12 bg-white p-12 lg:p-20 rounded-[3rem] shadow-xl border border-slate-200 min-h-screen relative overflow-hidden">
+                        {/* Realistic document simulation */}
+                        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
+                        
+                        <div className="flex justify-between items-start">
+                           <div className="space-y-4">
+                              <div className="flex items-center gap-3">
+                                 <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-black italic">S</div>
+                                 <span className="text-lg font-black text-dark tracking-tighter uppercase italic">SimpleCare <span className="text-primary italic">Verified</span></span>
+                              </div>
+                              <div className="space-y-1">
+                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Facility Signature</p>
+                                 <p className="text-sm font-bold text-dark italic">{viewingRecord.doctor}</p>
+                              </div>
+                           </div>
+                           <div className="text-right space-y-1">
+                              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic tracking-widest">Issuance Date</p>
+                              <p className="text-sm font-bold text-dark italic">{viewingRecord.date}</p>
+                           </div>
+                        </div>
+
+                        <div className="h-px bg-slate-100 w-full"></div>
+
+                        <div className="space-y-8">
+                           <div className="flex items-center gap-3 text-primary">
+                              <ShieldCheck className="w-8 h-8" />
+                              <h4 className="text-2xl font-black italic uppercase tracking-tight">Prescription <span className="text-dark">Order</span></h4>
+                           </div>
+                           
+                           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                              <div className="space-y-6">
+                                 <div className="p-6 bg-slate-50 rounded-3xl border border-slate-100 space-y-3">
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Patient Record</p>
+                                    <p className="text-lg font-bold text-dark italic">{user?.name || 'Authorized User'}</p>
+                                 </div>
+                                 <div className="p-6 bg-slate-50 rounded-3xl border border-slate-100 space-y-3">
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Diagnosis</p>
+                                    <p className="text-lg font-bold text-dark italic">Verified Clinical Follow-up</p>
+                                 </div>
+                              </div>
+                              <div className="space-y-6">
+                                 <div className="p-8 border-4 border-dashed border-slate-100 rounded-[3rem] flex flex-col items-center justify-center text-center gap-4">
+                                    <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-300">
+                                       <RefreshCw className="w-8 h-8" />
+                                    </div>
+                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-relaxed">Secured Digital Link<br/>Requires Provider Key</p>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+
+                        <div className="pt-20 text-center space-y-4">
+                           <div className="inline-block px-8 py-3 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase italic tracking-widest border border-emerald-100">
+                              Authenticity Verified by Blockchain
+                           </div>
+                           <p className="text-[9px] font-bold text-slate-300 uppercase italic max-w-sm mx-auto leading-relaxed">
+                              This is a digitally signed medical document. Any modification voids the verification token.
+                           </p>
+                        </div>
+                    </div>
                 </div>
              </motion.div>
           </motion.div>

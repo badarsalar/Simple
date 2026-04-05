@@ -16,6 +16,7 @@ import OrderManager from './OrderManager';
 import ProviderAnalytics from './ProviderAnalytics';
 import Appointments from './Appointments';
 import Settings from './Settings';
+import Messages from './Messages';
 
 const DashboardOverview = () => {
   const { user } = useAuth();
@@ -25,7 +26,7 @@ const DashboardOverview = () => {
 
   const renderDashboard = () => {
     // Patient sub-pages
-    if (path.includes('/dashboard/vault')) {
+    if (path.includes('/dashboard/vault') || path.includes('/dashboard/prescriptions')) {
       return <HealthVault />;
     }
     if (path.includes('/dashboard/appointments')) {
@@ -33,6 +34,9 @@ const DashboardOverview = () => {
     }
     if (path.includes('/dashboard/settings')) {
       return <Settings />;
+    }
+    if (path.includes('/dashboard/messages')) {
+      return <Messages />;
     }
     if (path.includes('/dashboard/bug-report')) {
       return <BugReport />;
