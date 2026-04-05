@@ -95,45 +95,53 @@ const LiveStreams = () => {
       <main className="p-6 lg:p-12 max-w-[1600px] mx-auto space-y-20">
         {/* Featured Hero Section */}
         {featuredStream && (
-          <section className="relative rounded-[4rem] overflow-hidden group shadow-2xl border border-white/5">
-             <div className="aspect-[21/9] lg:aspect-[25/9] relative">
-                <img src="https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=2000" className="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-110" alt="Featured" />
-                <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent"></div>
+          <section className="relative rounded-[3rem] lg:rounded-[4rem] overflow-hidden group shadow-2xl border border-white/5 bg-slate-900">
+             <div className="relative min-h-[500px] lg:h-[600px] flex flex-col justify-center">
+                {/* Background Image & Overlays */}
+                <div className="absolute inset-0">
+                  <img 
+                    src="https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=2000" 
+                    className="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-110" 
+                    alt="Featured" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-black via-black/60 lg:via-black/40 to-transparent"></div>
+                </div>
                 
-                <div className="absolute inset-0 p-8 lg:p-20 flex flex-col justify-center max-w-3xl space-y-8">
-                   <div className="flex items-center gap-3">
-                      <span className="px-5 py-2 bg-rose-600 rounded-xl text-[10px] font-black uppercase italic animate-pulse shadow-xl shadow-rose-600/30">Live Spotlight</span>
-                      <span className="px-5 py-2 bg-white/10 backdrop-blur-md rounded-xl text-[10px] font-black uppercase italic border border-white/10">1.8k Active Listeners</span>
+                {/* Content Wrapper */}
+                <div className="relative z-10 p-6 md:p-12 lg:p-20 max-w-3xl space-y-6 md:space-y-8">
+                   <div className="flex flex-wrap items-center gap-2 md:gap-3">
+                      <span className="px-3 md:px-5 py-1.5 md:py-2 bg-rose-600 rounded-lg md:rounded-xl text-[9px] md:text-[10px] font-black uppercase italic animate-pulse shadow-xl shadow-rose-600/30">Live Spotlight</span>
+                      <span className="px-3 md:px-5 py-1.5 md:py-2 bg-white/10 backdrop-blur-md rounded-lg md:rounded-xl text-[9px] md:text-[10px] font-black uppercase italic border border-white/10">1.8k Active Listeners</span>
                    </div>
                    
-                   <div className="space-y-4">
-                      <h1 className="text-3xl lg:text-5xl font-black italic uppercase tracking-tighter leading-none">
-                        Neurology <span className="text-primary italic">Deep Dive</span>
+                   <div className="space-y-3 md:space-y-4">
+                      <h1 className="text-2xl sm:text-3xl lg:text-5xl font-black italic uppercase tracking-tighter leading-tight lg:leading-none text-white">
+                        Neurology <span className="text-primary italic border-b-4 border-primary/20">Deep Dive</span>
                       </h1>
-                      <div className="flex items-center gap-4 pt-2">
-                        <div className="w-12 h-12 rounded-2xl border-2 border-primary/40 p-0.5">
-                           <img src={featuredStream.avatar} className="w-full h-full object-cover rounded-xl" alt="" />
+                      <div className="flex items-center gap-3 md:gap-4 pt-1 md:pt-2">
+                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl border-2 border-primary/40 p-0.5 shrink-0">
+                           <img src={featuredStream.avatar} className="w-full h-full object-cover rounded-lg md:rounded-xl" alt="" />
                         </div>
                         <div>
-                          <p className="text-xl font-black italic text-white/90">Dr. {featuredStream.name}</p>
-                          <p className="text-primary font-black uppercase italic tracking-widest text-[10px]">{featuredStream.specialization || 'Clinical Expert'}</p>
+                          <p className="text-lg md:text-xl font-black italic text-white/90">Dr. {featuredStream.name}</p>
+                          <p className="text-primary font-black uppercase italic tracking-widest text-[9px] md:text-[10px]">{featuredStream.specialization || 'Clinical Expert'}</p>
                         </div>
                       </div>
                    </div>
 
-                   <p className="text-slate-400 font-bold italic text-sm lg:text-base leading-relaxed max-w-xl">
+                   <p className="text-slate-400 font-bold italic text-xs md:text-sm lg:text-base leading-relaxed max-w-xl">
                       Join the most intensive surgical walkthrough of 2026. Real-time patient cases, procedural mastery, and interactive clinical Q&A.
                    </p>
 
-                   <div className="flex items-center gap-4 pt-4">
+                   <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4 pt-3 md:pt-4">
                       <button 
                         onClick={() => navigate(`/stream/${featuredStream.id}`)}
-                        className="px-10 py-5 bg-primary text-white rounded-3xl text-sm font-black uppercase italic tracking-widest shadow-2xl shadow-primary/30 hover:scale-105 transition-all flex items-center gap-3"
+                        className="px-8 lg:px-10 py-4 lg:py-5 bg-primary text-white rounded-2xl lg:rounded-3xl text-xs md:text-sm font-black uppercase italic tracking-widest shadow-2xl shadow-primary/30 hover:scale-105 transition-all flex items-center justify-center gap-3"
                       >
-                         <PlayCircle className="w-6 h-6" /> Join Live
+                         <PlayCircle className="w-5 h-5 md:w-6 md:h-6" /> Join Live
                       </button>
-                      <button className="px-8 py-5 bg-white/5 backdrop-blur-md text-white rounded-3xl text-sm font-black uppercase italic tracking-widest hover:bg-white/10 transition-all flex items-center gap-3 border border-white/10">
-                         <Star className="w-5 h-5 text-amber-500" /> Remind Me
+                      <button className="px-6 lg:px-8 py-4 lg:py-5 bg-white/5 backdrop-blur-md text-white rounded-2xl lg:rounded-3xl text-xs md:text-sm font-black uppercase italic tracking-widest hover:bg-white/10 transition-all flex items-center justify-center gap-3 border border-white/10">
+                         <Star className="w-4 h-4 md:w-5 md:h-5 text-amber-500" /> Remind Me
                       </button>
                    </div>
                 </div>

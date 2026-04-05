@@ -54,46 +54,43 @@ const Cart = () => {
     <div className="min-h-screen bg-slate-50">
       <Navbar />
 
-      <div className="pt-24 pb-20">
+      <div className="pt-20 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Breadcrumbs & Navigation */}
-          <nav className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-400 mb-8 overflow-x-auto whitespace-nowrap pb-2">
-            <Link to="/" className="hover:text-primary transition-colors">Home</Link>
-            <ChevronRight className="w-3 h-3 shrink-0" />
-            <Link to="/pharmacies" className="hover:text-primary transition-colors">Pharmacies</Link>
-            <ChevronRight className="w-3 h-3 shrink-0" />
-            <span className="text-dark italic">Shopping Cart</span>
-          </nav>
-
-          {/* Page Title */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-                  <ShoppingBag className="w-6 h-6 text-primary" />
-                </div>
-                <h1 className="text-3xl md:text-4xl font-black text-dark italic uppercase tracking-tighter">
-                  Your <span className="text-primary tracking-tighter italic">Cart</span>
+          {/* Compact Header & Navigation */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div className="space-y-1">
+              <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">
+                <Link to="/" className="hover:text-primary transition-colors">Home</Link>
+                <ChevronRight className="w-3 h-3 shrink-0" />
+                <Link to="/pharmacies" className="hover:text-primary transition-colors">Pharmacies</Link>
+                <ChevronRight className="w-3 h-3 shrink-0" />
+                <span className="text-dark italic">Cart</span>
+              </nav>
+              <div className="flex items-center gap-3">
+                <ShoppingBag className="w-6 h-6 text-primary" />
+                <h1 className="text-2xl md:text-3xl font-black text-dark italic uppercase tracking-tighter">
+                  Your <span className="text-primary tracking-tighter italic">Basket</span>
                 </h1>
+                <span className="hidden md:block w-px h-6 bg-slate-200 mx-2" />
+                <p className="hidden md:block text-slate-400 font-bold italic text-sm">
+                  {cart.length} items
+                </p>
               </div>
-              <p className="text-slate-500 font-medium ml-1">
-                You have <span className="text-dark font-bold underline decoration-primary/30 decoration-4">{cart.length} unique items</span> in your healthcare basket.
-              </p>
             </div>
             
             <Link
               to="/pharmacies"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 rounded-xl font-bold text-sm text-slate-600 hover:border-primary hover:text-primary transition-all shadow-sm"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-100 rounded-xl font-black text-[10px] uppercase tracking-widest text-slate-400 hover:border-primary hover:text-primary transition-all shadow-sm"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="w-3.5 h-3.5" />
               Continue Shopping
             </Link>
           </div>
 
           {cart.length > 0 ? (
-            <div className="grid lg:grid-cols-12 gap-10">
+            <div className="grid lg:grid-cols-12 gap-10 items-start">
               {/* Cart Items List */}
-              <div className="lg:col-span-8 space-y-6">
+              <div className="lg:col-span-8 space-y-4">
                 <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
                   <div className="hidden md:grid grid-cols-12 gap-4 p-6 bg-slate-50/50 border-b border-slate-100 text-[10px] font-black uppercase tracking-widest text-slate-400">
                     <div className="col-span-6 italic">Product Details</div>
@@ -103,69 +100,69 @@ const Cart = () => {
 
                   <div className="divide-y divide-slate-50">
                     {cart.map((item, index) => (
-                      <div key={`${item.id}-${index}`} className="p-6 hover:bg-slate-50/30 transition-colors group">
-                        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                      <div key={`${item.id}-${index}`} className="p-4 md:p-5 hover:bg-slate-50/30 transition-colors group">
+                        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
                           {/* Product Info */}
                           <div className="col-span-1 md:col-span-6">
-                            <div className="flex gap-4 lg:gap-6">
-                              <div className="w-20 h-20 md:w-24 md:h-24 bg-white rounded-2xl overflow-hidden shrink-0 border border-slate-100 p-1 group-hover:scale-105 transition-transform">
-                                <div className="w-full h-full bg-slate-50 rounded-xl overflow-hidden relative">
+                            <div className="flex gap-4">
+                              <div className="w-16 h-16 md:w-20 md:h-20 bg-white rounded-xl overflow-hidden shrink-0 border border-slate-100 p-1 group-hover:scale-105 transition-transform">
+                                <div className="w-full h-full bg-slate-50 rounded-lg overflow-hidden relative">
                                   <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
-                                  <div className="absolute inset-0 bg-gradient-to-t from-dark/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                                 </div>
                               </div>
-                              <div className="flex-1 min-w-0 py-1">
-                                <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">{item.category}</p>
-                                <h3 className="font-bold text-dark text-lg leading-tight mb-1 group-hover:text-primary transition-colors truncate">
+                              <div className="flex-1 min-w-0 py-0.5">
+                                <p className="text-[9px] font-black uppercase tracking-widest text-primary mb-0.5">{item.category}</p>
+                                <h3 className="font-bold text-dark text-base leading-tight mb-1 group-hover:text-primary transition-colors truncate">
                                   {item.name}
                                 </h3>
-                                <p className="text-xs font-medium text-slate-400 flex items-center gap-1">
-                                  <Info className="w-3 h-3 text-slate-300" />
-                                  Standard Delivery in 2-3 hrs
-                                </p>
-                                <button
-                                  onClick={() => removeFromCart(item.id)}
-                                  className="mt-3 flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-rose-400 hover:text-rose-600 transition-colors bg-rose-50 px-3 py-1.5 rounded-lg w-fit"
-                                >
-                                  <Trash2 className="w-3.5 h-3.5" />
-                                  Remove Item
-                                </button>
+                                <div className="flex items-center gap-3">
+                                  <button
+                                    onClick={() => removeFromCart(item.id)}
+                                    className="text-[9px] font-black uppercase tracking-widest text-rose-400 hover:text-rose-600 transition-colors bg-rose-50 px-2 py-1 rounded"
+                                  >
+                                    <Trash2 className="w-3 h-3 inline-block mr-1" />
+                                    Remove
+                                  </button>
+                                  <p className="text-[10px] font-medium text-slate-400">
+                                    Delivery in 2-3 hrs
+                                  </p>
+                                </div>
                               </div>
                             </div>
                           </div>
 
                           {/* Quantity Controls */}
                           <div className="col-span-1 md:col-span-3">
-                            <div className="flex justify-center flex-col items-center gap-2">
-                              <div className="flex items-center gap-1 bg-white border border-slate-200 p-1 rounded-xl shadow-sm">
+                            <div className="flex justify-center flex-col items-center">
+                              <div className="flex items-center gap-1 bg-white border border-slate-100 p-0.5 rounded-lg">
                                 <button
                                   onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                                  className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-primary hover:bg-primary/5 transition-colors rounded-lg"
+                                  className="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-primary hover:bg-primary/5 transition-colors rounded-md"
                                   disabled={item.quantity <= 1}
                                 >
-                                  <Minus className="w-4 h-4" />
+                                  <Minus className="w-3.5 h-3.5" />
                                 </button>
-                                <span className="text-lg font-black text-dark w-10 text-center italic">{item.quantity}</span>
+                                <span className="text-base font-black text-dark w-8 text-center italic">{item.quantity}</span>
                                 <button
                                   onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                                  className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-primary hover:bg-primary/5 transition-colors rounded-lg"
+                                  className="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-primary hover:bg-primary/5 transition-colors rounded-md"
                                   disabled={item.quantity >= 99}
                                 >
-                                  <Plus className="w-4 h-4" />
+                                  <Plus className="w-3.5 h-3.5" />
                                 </button>
                               </div>
-                              <span className="text-[10px] font-bold text-slate-400">Rs. {parseFloat(item.price).toFixed(2)} / unit</span>
+                              <span className="text-[9px] font-bold text-slate-300 mt-1 uppercase tracking-widest italic">Rs. {parseFloat(item.price).toFixed(0)} / unit</span>
                             </div>
                           </div>
 
                           {/* Item Subtotal */}
                           <div className="col-span-1 md:col-span-3 text-right">
-                            <div className="text-xl md:text-2xl font-black text-dark italic">
-                              Rs. <span className="text-primary">{(parseFloat(item.price) * item.quantity).toFixed(2)}</span>
+                            <div className="text-lg md:text-xl font-black text-dark italic">
+                              Rs. <span className="text-primary">{(parseFloat(item.price) * item.quantity).toFixed(0)}</span>
                             </div>
                             {item.quantity > 1 && (
-                              <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest bg-emerald-50 px-2 py-1 rounded-md">
-                                Savings Applied
+                              <span className="text-[8px] font-black text-emerald-500 uppercase tracking-[0.2em] bg-emerald-50 px-1.5 py-0.5 rounded italic">
+                                Bulk Price
                               </span>
                             )}
                           </div>
@@ -195,8 +192,8 @@ const Cart = () => {
               </div>
 
               {/* Order Summary Sidebar */}
-              <div className="lg:col-span-4 lg:sticky lg:top-28 h-fit">
-                <div className="bg-white rounded-[3rem] border border-slate-100 shadow-xl overflow-hidden">
+              <div className="lg:col-span-4 lg:sticky lg:top-20 h-fit">
+                <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-xl overflow-hidden">
                   <div className="p-8 pb-4">
                     <h3 className="text-2xl font-black text-dark italic uppercase tracking-tighter mb-6">
                       Order <span className="text-primary tracking-tighter italic">Summary</span>
