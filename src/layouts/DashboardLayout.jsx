@@ -103,8 +103,9 @@ const DashboardLayout = ({ children }) => {
             <NavLink
               key={item.name}
               to={item.path}
+              end={item.path === '/dashboard'}
               className={({ isActive }) => `
-                flex items-center gap-4 px-5 py-4 rounded-2xl text-sm font-black uppercase italic tracking-widest transition-all
+                flex items-center gap-4 px-5 py-4 rounded-2xl text-[10px] font-black uppercase italic tracking-widest transition-all
                 ${isActive 
                   ? 'bg-primary text-white shadow-xl shadow-primary/20 translate-x-2' 
                   : 'text-slate-400 hover:bg-slate-50 hover:text-dark hover:translate-x-1'
