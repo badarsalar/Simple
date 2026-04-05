@@ -12,7 +12,9 @@ import {
   MapPin,
   Stethoscope,
   Info,
-  Lock
+  Lock,
+  FileText,
+  CreditCard
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -28,6 +30,8 @@ const BookAppointment = () => {
   const [selectedDate, setSelectedDate] = useState(0);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [consultType, setConsultType] = useState('Video');
+  const [reason, setReason] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('pay-at-clinic');
   const [isBooking, setIsBooking] = useState(false);
 
   // Mock Data - In real app, fetch based on ID
@@ -92,6 +96,8 @@ const BookAppointment = () => {
       location: currentLocation.name,
       address: currentLocation.address,
       type: consultType,
+      reason: reason,
+      paymentMethod: paymentMethod,
       image: doctor.image
     };
 
@@ -138,7 +144,7 @@ const BookAppointment = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8f9fc] selection:bg-primary/10">
+    <div className="min-h-screen bg-[#f8f9fc] selection:bg-primary/10 overflow-x-hidden">
       <Navbar />
       
       <div className="pt-24 pb-20 max-w-5xl mx-auto px-4 sm:px-6">
@@ -289,6 +295,60 @@ const BookAppointment = () => {
                      </button>
                   </div>
                </div>
+
+               <div>
+                  <h3 className="text-sm font-black text-dark uppercase tracking-widest italic mb-6 flex items-center gap-3">
+                     <div className="w-8 h-8 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                        <FileText className="w-4 h-4" />
+                     </div>
+                     4. Reason for Visit (Optional)
+                  </h3>
+                  <textarea
+                    value={reason}
+                    onChange={(e) => setReason(e.target.value)}
+                    placeholder="Briefly describe your symptoms or reason for booking..."
+                    className="w-full p-6 rounded-[2rem] border-2 border-slate-100 bg-slate-50 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-bold text-sm italic resize-none h-32 outline-none"
+                  ></textarea>
+               </div>
+
+               <div>
+                  <h3 className="text-sm font-black text-dark uppercase tracking-widest italic mb-6 flex items-center gap-3">
+                     <div className="w-8 h-8 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                        <CreditCard className="w-4 h-4" />
+                     </div>
+                     5. Payment Method
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                     <button 
+                        onClick={() => setPaymentMethod('pay-at-clinic')}
+                        className={`p-5 rounded-[2rem] border-2 text-left transition-all ${paymentMethod === 'pay-at-clinic' ? 'border-primary bg-primary/5 shadow-xl shadow-primary/10 scale-105' : 'border-slate-100 hover:border-slate-200 bg-white'}`}
+                     >
+                        <p className="text-[10px] font-black text-dark uppercase tracking-widest italic mb-1">Pay at Clinic</p>
+                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Direct Payment</p>
+                     </button>
+                     <button 
+                        onClick={() => setPaymentMethod('easypaisa')}
+                        className={`p-5 rounded-[2rem] border-2 text-left transition-all flex flex-col justify-center ${paymentMethod === 'easypaisa' ? 'border-emerald-500 bg-emerald-50 shadow-xl shadow-emerald-500/10 scale-105' : 'border-slate-100 hover:border-slate-200 bg-white'}`}
+                     >
+                        <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest italic mb-1">EasyPaisa</p>
+                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Mobile Wallet</p>
+                     </button>
+                     <button 
+                        onClick={() => setPaymentMethod('jazzcash')}
+                        className={`p-5 rounded-[2rem] border-2 text-left transition-all flex flex-col justify-center ${paymentMethod === 'jazzcash' ? 'border-rose-500 bg-rose-50 shadow-xl shadow-rose-500/10 scale-105' : 'border-slate-100 hover:border-slate-200 bg-white'}`}
+                     >
+                        <p className="text-[10px] font-black text-rose-600 uppercase tracking-widest italic mb-1">JazzCash</p>
+                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Mobile Wallet</p>
+                     </button>
+                     <button 
+                        onClick={() => setPaymentMethod('bank')}
+                        className={`p-5 rounded-[2rem] border-2 text-left transition-all sm:col-span-3 ${paymentMethod === 'bank' ? 'border-blue-500 bg-blue-50 shadow-xl shadow-blue-500/10 scale-[1.02]' : 'border-slate-100 hover:border-slate-200 bg-white'}`}
+                     >
+                        <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest italic mb-1">Bank Transfer / Card</p>
+                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Secure Online Payment via IBFT</p>
+                     </button>
+                  </div>
+               </div>
             </div>
           </div>
 
@@ -328,7 +388,12 @@ const BookAppointment = () => {
                          <p className="text-[10px] font-black text-white/40 uppercase tracking-widest italic">Total Fee</p>
                          <p className="text-2xl font-black italic tracking-tighter leading-none">Rs. {currentLocation.fee}</p>
                       </div>
-                      <p className="text-[9px] font-bold text-emerald-400 uppercase tracking-widest mb-1 italic">Direct Pay at Clinic</p>
+                      <p className="text-[9px] font-bold text-emerald-400 uppercase tracking-widest mb-1 italic">
+                        {paymentMethod === 'pay-at-clinic' ? 'Direct Pay at Clinic' : 
+                         paymentMethod === 'easypaisa' ? 'EasyPaisa Mobile' : 
+                         paymentMethod === 'jazzcash' ? 'JazzCash Mobile' : 
+                         'Bank / Card Payment'}
+                      </p>
                    </div>
 
                    <button 
@@ -355,7 +420,9 @@ const BookAppointment = () => {
                    <Info className="w-6 h-6" />
                 </div>
                 <p className="text-[9px] font-bold text-slate-400 uppercase leading-relaxed italic">
-                   Note: Appointment is directly placed. No online payment required. Pay at the clinic during your visit.
+                   {paymentMethod === 'pay-at-clinic' 
+                     ? "Note: Appointment is directly placed. No online payment required. Pay at the clinic during your visit."
+                     : `You have selected ${paymentMethod === 'easypaisa' ? 'EasyPaisa' : paymentMethod === 'jazzcash' ? 'JazzCash' : 'Bank Transfer'}. You will receive a prompt to complete the payment to finalize the booking.`}
                 </p>
              </div>
           </div>
