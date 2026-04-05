@@ -98,9 +98,38 @@ export const DashboardProvider = ({ children }) => {
     ];
   });
 
+  // Reviews State
+  const [reviews, setReviews] = useState(() => {
+    const saved = localStorage.getItem('dashboard_reviews');
+    return saved ? JSON.parse(saved) : [
+      {
+        id: 1,
+        providerId: 1, // Dr. Saira Jabeen (from BookAppointment mock) or other IDs
+        userName: "Ali Hassan",
+        userAvatar: "https://i.pravatar.cc/150?u=ali",
+        rating: 5,
+        comment: "Excellent experience. Very professional and helpful.",
+        date: "Dec 20, 2026"
+      },
+      {
+        id: 2,
+        providerId: 1,
+        userName: "Sara Malik",
+        userAvatar: "https://i.pravatar.cc/150?u=sara",
+        rating: 4,
+        comment: "Wait time was a bit long, but the consultation was thorough.",
+        date: "Dec 18, 2026"
+      }
+    ];
+  });
+
   useEffect(() => {
     localStorage.setItem('dashboard_chats', JSON.stringify(chats));
   }, [chats]);
+
+  useEffect(() => {
+    localStorage.setItem('dashboard_reviews', JSON.stringify(reviews));
+  }, [reviews]);
 
   // Actions
   const addAppointment = (appointment) => {
@@ -200,6 +229,10 @@ export const DashboardProvider = ({ children }) => {
     setChats(prev => prev.filter(c => c.id !== chatId));
   };
 
+  const addReview = (review) => {
+    setReviews(prev => [{ ...review, id: Date.now(), date: 'Just now' }, ...prev]);
+  };
+
   const value = {
     appointments,
     vaultRecords,
@@ -216,7 +249,9 @@ export const DashboardProvider = ({ children }) => {
     startChatWithProvider,
     addAppointment,
     deleteMessage,
-    deleteChat
+    deleteChat,
+    reviews,
+    addReview
   };
 
   return (

@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import ReviewSystem from '../components/Shared/ReviewSystem';
 import { useCart } from '../context/CartContext';
 import CartDrawer from '../components/CartDrawer';
 
@@ -290,9 +291,10 @@ const PharmacyDetails = () => {
                     </div>
                   ))}
               </div>
-            </div>
-
+            {/* Reviews Section */}
+            <ReviewSystem providerId={id} />
           </div>
+        </div>
 
           {/* Sidebar */}
           <div className="lg:col-span-4 shrink-0">

@@ -16,8 +16,10 @@ import {
   Building,
   CheckCircle2,
   ChevronRight,
-  ArrowRight
+  ArrowRight,
+  ArrowLeft
 } from 'lucide-react';
+import ReviewSystem from '../components/Shared/ReviewSystem';
 
 const ProviderProfile = () => {
   const { id } = useParams();
@@ -180,7 +182,8 @@ const ProviderProfile = () => {
                 </div>
               </div>
             </div>
-
+            {/* Reviews Section */}
+            <ReviewSystem providerId={id} />
           </div>
 
           {/* Right Column: CTA */}

@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import ReviewSystem from '../components/Shared/ReviewSystem';
 
 const DepartmentCard = ({ name, icon: Icon, doctors }) => (
   <div className="bg-white p-5 rounded-xl border border-slate-200 hover:shadow-md transition-all group flex items-center justify-between">
@@ -243,9 +244,10 @@ const ClinicDetails = () => {
                     image="https://images.unsplash.com/photo-1559839734-2b71f153678e?q=80&w=400"
                  />
               </div>
-            </div>
-            
+            {/* Reviews Section */}
+            <ReviewSystem providerId={id} />
           </div>
+        </div>
 
           {/* Sidebar */}
           <div className="lg:col-span-4 shrink-0">
