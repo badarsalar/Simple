@@ -89,6 +89,16 @@ export const DashboardProvider = ({ children }) => {
     console.log('Updating profile with:', newData);
   };
 
+  const updateOrder = (id, status) => {
+    setOrders(prev => prev.map(order => 
+      order.id === id ? { ...order, status } : order
+    ));
+  };
+
+  const cancelOrder = (id) => {
+    updateOrder(id, 'cancelled');
+  };
+
   const value = {
     appointments,
     vaultRecords,
@@ -98,6 +108,7 @@ export const DashboardProvider = ({ children }) => {
     addVaultRecord,
     deleteVaultRecord,
     updateOrder,
+    cancelOrder,
     updateProfile
   };
 

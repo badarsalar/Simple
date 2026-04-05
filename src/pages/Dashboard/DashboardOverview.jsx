@@ -17,6 +17,7 @@ import ProviderAnalytics from './ProviderAnalytics';
 import Appointments from './Appointments';
 import Settings from './Settings';
 import Messages from './Messages';
+import Orders from '../Orders';
 
 const DashboardOverview = () => {
   const { user } = useAuth();
@@ -40,6 +41,9 @@ const DashboardOverview = () => {
     }
     if (path.includes('/dashboard/bug-report')) {
       return <BugReport />;
+    }
+    if (path.includes('/dashboard/orders') && role === 'patient') {
+      return <Orders />;
     }
 
     // Provider sub-pages
