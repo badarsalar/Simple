@@ -23,6 +23,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useDashboard } from '../../context/DashboardContext';
 import StoreSelectionModal from '../../components/StoreSelectionModal';
 import { motion, AnimatePresence } from 'framer-motion';
+import { jsPDF } from "jspdf";
 
 const HealthVault = () => {
   const { user, addNotification } = useAuth();
@@ -84,33 +85,54 @@ const HealthVault = () => {
     
     // Simulate complex background task
     setTimeout(() => {
-      addNotification({
-        title: 'Download Ready',
-        message: 'Your health record has been downloaded successfully.',
-        type: 'success'
-      });
-      
-      // Actual functional download logic simulation using Blob
-      const docContent = `
-        PRO-TECH CLINICAL RECORD: ${record.name}
-        ------------------------------------------
-        Recipient: ${user?.name || 'Authorized User'}
-        Provider: ${record.doctor}
-        Date: ${record.date}
-        Status: ${record.status}
-        ------------------------------------------
-        AUTHENTICITY VERIFIED VIA BLOCKCHAIN ID: ${record.id}
-      `;
-      const blob = new Blob([docContent], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `${record.name.replace(/\s+/g, '_')}_Secure.txt`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    }, 2000);
+      try {
+        const doc = new jsPDF();
+        
+        // PDF Professional Headers
+        doc.setFontSize(26);
+        doc.setTextColor(15, 23, 42); // slate-900
+        doc.text("SIMPLECARE NETWORK", 20, 30);
+        
+        doc.setFontSize(10);
+        doc.setTextColor(100);
+        doc.text("CERTIFIED DIGITAL HEALTH RECORD", 20, 38);
+        doc.line(20, 42, 190, 42);
+        
+        // Record Details
+        doc.setFontSize(12);
+        doc.setTextColor(0);
+        doc.text(`Record Name: ${record.name}`, 20, 60);
+        doc.text(`Provider: ${record.doctor}`, 20, 70);
+        doc.text(`Date of Issue: ${record.date}`, 20, 80);
+        doc.text(`Verification ID: ${record.id}`, 20, 90);
+        
+        // Clinical Body
+        doc.setFontSize(14);
+        doc.text("Clinical Summary", 20, 110);
+        doc.setFontSize(10);
+        doc.text("This document serves as an authorized original copy of the digital prescription.", 20, 120);
+        doc.text("Authenticity is verified via blockchain-secured provider tokens.", 20, 125);
+        
+        doc.setTextColor(17, 158, 115); // emerald-600
+        doc.text("STATUS: AUTHENTIC & VERIFIED", 20, 140);
+        
+        // Footer Digital Seal
+        doc.line(20, 270, 190, 270);
+        doc.setFontSize(8);
+        doc.setTextColor(150);
+        doc.text("End-to-End Encrypted Healthcare Document • SimpleCare Platforms", 105, 278, { align: 'center' });
+        
+        doc.save(`${record.name.replace(/\s+/g, '_')}_SimpleCare.pdf`);
+        
+        addNotification({
+          title: 'PDF Exported',
+          message: `${record.name} is now available in your local downloads.`,
+          type: 'success'
+        });
+      } catch (err) {
+        console.error("PDF Generation failed:", err);
+      }
+    }, 1500);
   };
 
   const handleUploadSubmit = (e) => {
@@ -437,33 +459,38 @@ const HealthVault = () => {
 
                         <div className="h-px bg-slate-100 w-full"></div>
 
-                        <div className="space-y-8">
-                           <div className="flex items-center gap-3 text-primary">
-                              <ShieldCheck className="w-8 h-8" />
-                              <h4 className="text-2xl font-black italic uppercase tracking-tight">Prescription <span className="text-dark">Order</span></h4>
-                           </div>
-                           
-                           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                              <div className="space-y-6">
-                                 <div className="p-6 bg-slate-50 rounded-3xl border border-slate-100 space-y-3">
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Patient Record</p>
-                                    <p className="text-lg font-bold text-dark italic">{user?.name || 'Authorized User'}</p>
-                                 </div>
-                                 <div className="p-6 bg-slate-50 rounded-3xl border border-slate-100 space-y-3">
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Diagnosis</p>
-                                    <p className="text-lg font-bold text-dark italic">Verified Clinical Follow-up</p>
-                                 </div>
-                              </div>
-                              <div className="space-y-6">
-                                 <div className="p-8 border-4 border-dashed border-slate-100 rounded-[3rem] flex flex-col items-center justify-center text-center gap-4">
-                                    <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-300">
-                                       <RefreshCw className="w-8 h-8" />
-                                    </div>
-                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-relaxed">Secured Digital Link<br/>Requires Provider Key</p>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
+                         <div className="space-y-8 relative z-10 px-2 sm:px-0">
+                            <div className="flex items-center gap-3 text-primary">
+                               <div className="p-3 bg-primary/10 rounded-2xl">
+                                  <ShieldCheck className="w-8 h-8" />
+                               </div>
+                               <h4 className="text-2xl font-black italic uppercase tracking-tight leading-none">Prescription <span className="text-dark">Order</span></h4>
+                            </div>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10">
+                               <div className="space-y-6">
+                                  <div className="p-6 bg-slate-50 border-2 border-slate-100 rounded-[2rem] space-y-2 shadow-sm">
+                                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em] italic">Authorized Recipient</p>
+                                     <p className="text-lg font-bold text-dark italic leading-none">{user?.name || 'Authorized User'}</p>
+                                  </div>
+                                  <div className="p-6 bg-slate-50 border-2 border-slate-100 rounded-[2rem] space-y-2 shadow-sm">
+                                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em] italic">Clinical Diagnosis</p>
+                                     <p className="text-lg font-bold text-dark italic leading-none">Verified Follow-up Order</p>
+                                  </div>
+                               </div>
+                               <div className="space-y-6">
+                                  <div className="p-8 border-4 border-dashed border-slate-100 rounded-[3rem] flex flex-col items-center justify-center text-center gap-4 bg-slate-50/30">
+                                     <div className="w-16 h-16 bg-white border border-slate-100 rounded-3xl flex items-center justify-center text-primary shadow-xl">
+                                        <FileCheck className="w-8 h-8 font-black" />
+                                     </div>
+                                     <div className="space-y-1">
+                                       <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest leading-relaxed">Secured Digital Verification</p>
+                                       <p className="text-[8px] font-bold text-slate-300 uppercase italic">Immutable Pharmacy Link Active</p>
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
+                         </div>
 
                         <div className="pt-20 text-center space-y-4">
                            <div className="inline-block px-8 py-3 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase italic tracking-widest border border-emerald-100">

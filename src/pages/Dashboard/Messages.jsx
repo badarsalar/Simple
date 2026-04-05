@@ -16,7 +16,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useDashboard } from '../../context/DashboardContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Download as DownloadIcon } from 'lucide-react';
 
 const Messages = () => {
   const { user } = useAuth();
@@ -48,8 +48,18 @@ const Messages = () => {
     reader.readAsDataURL(file);
   };
 
+  const handleDownloadMedia = (attachment) => {
+    if (!attachment?.data) return;
+    const link = document.createElement('a');
+    link.href = attachment.data;
+    link.download = attachment.name || 'SimpleCare_Attachment';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
-    <div className="h-[calc(100vh-140px)] flex bg-white rounded-[3.5rem] border border-slate-100 shadow-xl overflow-hidden animate-in slide-in-from-bottom-8 duration-700">
+    <div className="h-[calc(100vh-120px)] lg:h-[calc(100vh-140px)] flex bg-white rounded-[2rem] lg:rounded-[3.5rem] border border-slate-100 shadow-xl overflow-hidden animate-in slide-in-from-bottom-8 duration-700">
       
       {/* Sidebar: Chat List */}
       <div className={`w-full lg:w-96 border-r border-slate-50 flex flex-col bg-white ${selectedChatId ? 'hidden lg:flex' : 'flex'}`}>
@@ -101,7 +111,7 @@ const Messages = () => {
       </div>
 
       {/* Main Chat Area */}
-      <div className={`flex-1 flex flex-col bg-slate-50/50 ${!selectedChatId ? 'hidden lg:flex' : 'flex'}`}>
+      <div className={`flex-1 min-w-0 flex flex-col bg-slate-50/50 ${!selectedChatId ? 'hidden lg:flex' : 'flex'}`}>
         {selectedChat ? (
           <>
             {/* Chat Header */}
@@ -138,10 +148,9 @@ const Messages = () => {
                  <motion.div 
                    initial={{ scale: 0.9, opacity: 0, y: 10 }}
                    animate={{ scale: 1, opacity: 1, y: 0 }}
-                   key={msg.id} 
-                   className={`flex group/msg ${msg.sent ? 'justify-end' : 'justify-start'}`}
-                 >
-                    <div className={`max-w-[70%] lg:max-w-md relative ${msg.sent ? 'order-1' : 'order-2'}`}>
+                   key={msg.id}                    className={`flex group/msg ${msg.sent ? 'justify-end' : 'justify-start'} w-full`}
+                  >
+                     <div className={`max-w-[85%] sm:max-w-[70%] lg:max-w-md relative ${msg.sent ? 'order-1' : 'order-2'}`}>
                        <button 
                          onClick={() => deleteMessage(selectedChat.id, msg.id)}
                          className={`absolute -top-2 ${msg.sent ? '-left-10' : '-right-10'} p-2.5 bg-white text-slate-400 rounded-full shadow-lg opacity-0 group-hover/msg:opacity-100 transition-all hover:text-rose-500 hover:scale-110 active:scale-95 z-20`}
@@ -149,19 +158,30 @@ const Messages = () => {
                          <Trash2 className="w-3.5 h-3.5" />
                        </button>
                        <div className={`p-6 rounded-3xl relative shadow-xl space-y-3 ${msg.sent ? 'bg-primary text-white rounded-tr-none' : 'bg-white text-dark rounded-tl-none border border-slate-100'}`}>
-                          {msg.attachment?.type === 'image' && (
-                             <div className="mb-3 rounded-2xl overflow-hidden border-2 border-white/20 shadow-inner">
-                                <img src={msg.attachment.data} className="w-full max-h-64 object-cover" alt="" />
-                             </div>
-                          )}
-                          {msg.attachment?.type === 'file' && (
-                             <div className="flex items-center gap-3 p-3 bg-white/10 rounded-2xl border border-white/20 mb-3">
-                                <Paperclip className="w-5 h-5" />
-                                <div className="flex-1 truncate">
-                                   <p className="text-[10px] font-black uppercase truncate">{msg.attachment.name}</p>
-                                </div>
-                             </div>
-                          )}
+                           {msg.attachment?.type === 'image' && (
+                              <div 
+                                onClick={() => handleDownloadMedia(msg.attachment)}
+                                className="mb-3 rounded-2xl overflow-hidden border-2 border-white/20 shadow-inner cursor-pointer group/img relative"
+                              >
+                                 <img src={msg.attachment.data} className="w-full max-h-64 object-cover" alt="" />
+                                 <div className="absolute inset-0 bg-dark/20 opacity-0 group-hover/img:opacity-100 flex items-center justify-center transition-all">
+                                    <div className="p-3 bg-white/20 backdrop-blur-md rounded-2xl text-white">
+                                       <DownloadIcon className="w-6 h-6" />
+                                    </div>
+                                 </div>
+                              </div>
+                           )}
+                           {msg.attachment?.type === 'file' && (
+                              <div 
+                                onClick={() => handleDownloadMedia(msg.attachment)}
+                                className="flex items-center gap-3 p-3 bg-white/10 rounded-2xl border border-white/20 mb-3 cursor-pointer hover:bg-white/20 transition-all"
+                              >
+                                 <DownloadIcon className="w-5 h-5" />
+                                 <div className="flex-1 truncate">
+                                    <p className="text-[10px] font-black uppercase truncate">{msg.attachment.name}</p>
+                                 </div>
+                              </div>
+                           )}
                           {msg.attachment?.registration && (
                              <div className="p-4 bg-white/10 rounded-2xl border border-white/20 mb-3 space-y-2">
                                 <div className="flex items-center gap-2">
@@ -183,8 +203,8 @@ const Messages = () => {
             </div>
 
             {/* Chat Input */}
-            <div className="p-8 bg-white border-t border-slate-50 z-10">
-                <div className="flex items-center gap-4 bg-white border border-slate-100 rounded-[2.5rem] p-2 pl-6 focus-within:ring-4 focus-within:ring-primary/10 transition-all shadow-xl">
+            <div className="p-4 sm:p-8 bg-white border-t border-slate-50 z-10">
+                <div className="flex items-center gap-2 sm:gap-4 bg-white border border-slate-100 rounded-[2.5rem] p-1.5 sm:p-2 pl-4 sm:pl-6 focus-within:ring-4 focus-within:ring-primary/10 transition-all shadow-xl">
                    <label className="text-slate-400 hover:text-primary transition-all p-2 cursor-pointer">
                       <ImageIcon className="w-5 h-5" />
                       <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
@@ -201,9 +221,9 @@ const Messages = () => {
                      placeholder="Type your message securely..." 
                      className="flex-1 bg-transparent border-none focus:ring-0 text-sm font-bold italic text-dark py-4 placeholder:text-slate-300"
                    />
-                   <button onClick={handleSend} className="bg-dark text-white p-4 rounded-[2rem] hover:bg-primary transition-all shadow-xl hover:scale-105 active:scale-95 group">
-                      <Send className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-                   </button>
+                    <button onClick={handleSend} className="bg-dark text-white p-3 sm:p-4 rounded-[1.5rem] sm:rounded-[2rem] hover:bg-primary transition-all shadow-xl hover:scale-105 active:scale-95 group">
+                       <Send className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                    </button>
                 </div>
             </div>
           </>
